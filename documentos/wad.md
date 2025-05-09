@@ -111,9 +111,6 @@ Uma conta (1:N) pode ter várias transações. As chaves estrangeiras garantem a
 [Acesse o modelo físico da plataforma Prosperis (init.sql)](../scripts/init.sql)
 
 
-
-
-
 ```sql
 -- init.sql
 CREATE TABLE usuarios (
