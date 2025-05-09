@@ -2,9 +2,9 @@
 <a href= "https://www.inteli.edu.br/"><img src="assets/inteli.png" alt="Inteli - Instituto de Tecnologia e Liderança" border="0" width="40%"></a>
 </p>
 
----
+
 # Prosperis
----
+
 ## Inteli - Instituto de Tecnologia e Liderança
 
 ##  Autor:
