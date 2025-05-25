@@ -153,18 +153,57 @@ CREATE TABLE transacoes (
 
 
 ### 3.1.1 BD e Models (Semana 5)
-*Descreva aqui os Models implementados no sistema web*
 
-### 3.2. Arquitetura (Semana 5)
+No contexto da arquitetura Model-View-Controller (MVC), os Models (Modelos) são a camada responsável por gerenciar os dados da aplicação, a lógica de negócios e as regras de manipulação desses dados. Eles representam a estrutura do domínio do problema, ou seja, as entidades e como elas se relacionam, além de serem a ponte de comunicação com o sistema de persistência (o banco de dados).
 
-*Posicione aqui o diagrama de arquitetura da sua solução de aplicação web. Atualize sempre que necessário.*
 
-**Instruções para criação do diagrama de arquitetura**  
-- **Model**: A camada que lida com a lógica de negócios e interage com o banco de dados.
-- **View**: A camada responsável pela interface de usuário.
-- **Controller**: A camada que recebe as requisições, processa as ações e atualiza o modelo e a visualização.
-  
-*Adicione as setas e explicações sobre como os dados fluem entre o Model, Controller e View.*
+O projeto utiliza os seguintes modelos de dados, cada um correspondendo a uma tabela no banco de dados e representando uma entidade fundamental do sistema financeiro pessoal:
+
+1. Modelo: Usuário (usuarios)
+Este modelo encapsula todas as informações relativas a um usuário individual da aplicação. Ele é a base para a autenticação, autorização e para garantir que os dados sejam segregados e pertencentes apenas ao seu respectivo proprietário.
+
+Atributos:
+`id`: Identificador único e primário para cada usuário, gerado automaticamente.
+nome: Nome completo do usuário.
+`email`: Endereço de e-mail exclusivo do usuário, utilizado para login e identificação.
+`senha`: Senha do usuário (armazenada de forma segura, como um hash).
+`criado_em`: Timestamp da criação do registro do usuário.
+
+2. Modelo: Categoria (categorias)
+O modelo de Categoria permite aos usuários classificar e organizar suas transações financeiras. Por exemplo, um usuário pode ter categorias como "Alimentação", "Transporte", "Moradia", etc.
+
+Atributos:
+`id`: Identificador único e primário para cada categoria.
+`nome`: Nome descritivo da categoria.
+`usuario_id`: Chave estrangeira que vincula a categoria a um Usuário específico, garantindo que cada usuário tenha suas próprias categorias personalizadas.
+
+3. Modelo: Conta (contas)
+Este modelo representa as diferentes fontes ou destinos de dinheiro que um usuário pode possuir, como contas bancárias, carteiras digitais ou cartões de crédito. Ele gerencia o saldo de cada uma dessas contas.
+
+Atributos:
+`id`: Identificador único e primário para cada conta.
+`nome`: Nome que identifica a conta (ex: "NuConta", "Carteira", "Banco do Brasil").
+`saldo`: O valor monetário atual disponível na conta.
+`usuario_id`: Chave estrangeira que associa a conta a um Usuário específico.
+
+4. Modelo: Transação (transacoes)
+O modelo de Transação é o cerne do registro financeiro, representando cada entrada ou saída de dinheiro. Cada transação é detalhada, categorizada e ligada a uma conta específica.
+
+Atributos:
+`id`: Identificador único e primário para cada transação.
+descricao: Uma breve descrição do que a transação representa.
+`valor`: O valor monetário da transação.
+tipo: Indica se a transação é uma receita ou uma despesa.
+`data`: Timestamp da ocorrência ou registro da transação.
+`usuario_id`: Chave estrangeira que vincula a transação a um Usuário específico.
+`categoria_id`: Chave estrangeira que associa a transação a uma Categoria.
+`conta_id`: Chave estrangeira que liga a transação a uma Conta.
+`criado_em`: Timestamp da criação do registro da transação.
+`atualizado_em`: Timestamp da última modificação do registro da transação.
+### 3.2. Arquitetura 
+
+O Diagrama MVC é uma representação visual da arquitetura Model-View-Controller (MVC), um padrão de design de software amplamente utilizado no desenvolvimento de aplicações, especialmente as web. Seu principal objetivo é separar as responsabilidades de uma aplicação em três componentes interconectados, facilitando a organização do código, a manutenção, a escalabilidade e o desenvolvimento colaborativo.
+<img src="../assets/diagrama.png" width="100%">
 
 ### 3.3. Wireframes (Semana 03)
 

@@ -1,15 +1,28 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const routes = require('./routes'); // Importa o seu Express Router de routes/index.js
+const pool = require('./config/database'); 
+
+
+pool.connect()
+  .then(() => console.log('Conectado ao banco de dados!'))
+  .catch((err) => console.error('Erro ao conectar ao banco de dados:', err));
+
 const app = express();
-const PORT = 3000;
+const port = 3001; 
 
-// Middleware para processar JSON
-app.use(express.json());
+app.use(cors());
+app.use(bodyParser.json()); 
 
-// Rotas
-const routes = require('./routes/index');
-app.use('/', routes);
+// AQUI ESTÁ A CORREÇÃO: Passando a variável 'routes'
+app.use('/', routes); // Isso faz com que as rotas definidas em routes/index.js sejam acessíveis diretamente
 
-// Inicializa o servidor
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    console.log(`Servidor rodando na porta ${port}`); 
+    console.log(`Servidor rodando → http://localhost:${port}/`); // Ajuste a mensagem para refletir a URL base
+  });
+}
+
+module.exports = app;
