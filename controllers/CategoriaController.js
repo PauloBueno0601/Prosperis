@@ -1,32 +1,25 @@
-const pool = require('../config/database');
+const categoryModel = require('../models/categoryModel');
 
 exports.createCategory = async (req, res) => {
   const { nome } = req.body;
-  const usuario_id = req.user.id; 
+  const usuario_id = req.user.id;
 
   if (!nome) {
     return res.status(400).json({ message: 'O nome da categoria é obrigatório.' });
   }
 
-  const query = 'INSERT INTO categorias (nome, usuario_id) VALUES ($1, $2) RETURNING *';
-  const values = [nome, usuario_id];
-
   try {
-    const result = await pool.query(query, values);
-    res.status(201).json(result.rows[0]);
+    const category = await categoryModel.createCategory(nome, usuario_id);
+    res.status(201).json(category);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
 exports.getAllCategories = async (req, res) => {
-  const usuario_id = req.user.id; // Filtrar por usuário autenticado
-  const query = 'SELECT * FROM categorias WHERE usuario_id = $1 ORDER BY nome ASC'; 
-  const values = [usuario_id];
-
   try {
-    const result = await pool.query(query, values);
-    res.status(200).json(result.rows);
+    const categories = await categoryModel.getAllCategories(req.user.id);
+    res.status(200).json(categories);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -34,18 +27,14 @@ exports.getAllCategories = async (req, res) => {
 
 exports.getCategoryById = async (req, res) => {
   const { id } = req.params;
-  const usuario_id = req.user.id; 
-
-  const query = 'SELECT * FROM categorias WHERE id = $1 AND usuario_id = $2';
-  const values = [id, usuario_id];
+  const usuario_id = req.user.id;
 
   try {
-    const result = await pool.query(query, values);
-    if (result.rows.length === 0) {
-      // Retorna 404 para não revelar se a categoria existe mas não pertence ao usuário
+    const category = await categoryModel.getCategoryById(id, usuario_id);
+    if (!category) {
       return res.status(404).json({ message: 'Categoria não encontrada ou você não tem acesso.' });
     }
-    res.status(200).json(result.rows[0]);
+    res.status(200).json(category);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -54,27 +43,20 @@ exports.getCategoryById = async (req, res) => {
 exports.updateCategory = async (req, res) => {
   const { id } = req.params;
   const { nome } = req.body;
-  const usuario_id = req.user.id; // ID do usuário autenticado
+  const usuario_id = req.user.id;
 
   if (!nome) {
-    return res.status(400).json({ message: 'O nome da categoria é obrigatório para atualização.' });
+    return res.status(400).json({ message: 'O nome da categoria é obrigatório.' });
   }
 
   try {
-    // Verifique se a categoria pertence ao usuário logado
-    const checkOwnership = await pool.query('SELECT 1 FROM categorias WHERE id = $1 AND usuario_id = $2', [id, usuario_id]);
-    if (checkOwnership.rows.length === 0) {
-      return res.status(403).json({ message: 'Acesso negado ou categoria não encontrada para este usuário.' });
+    const authorized = await categoryModel.categoryBelongsToUser(id, usuario_id);
+    if (!authorized) {
+      return res.status(403).json({ message: 'Acesso negado ou categoria não encontrada.' });
     }
 
-    const query = 'UPDATE categorias SET nome = $1 WHERE id = $2 AND usuario_id = $3 RETURNING *;';
-    const values = [nome, id, usuario_id];
-
-    const result = await pool.query(query, values);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Categoria não encontrada.' }); // Geralmente não deve acontecer após checkOwnership
-    }
-    res.status(200).json(result.rows[0]);
+    const updated = await categoryModel.updateCategory(id, usuario_id, nome);
+    res.status(200).json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -82,22 +64,15 @@ exports.updateCategory = async (req, res) => {
 
 exports.deleteCategory = async (req, res) => {
   const { id } = req.params;
-  const usuario_id = req.user.id; // ID do usuário autenticado
+  const usuario_id = req.user.id;
 
   try {
-    // Verifique se a categoria pertence ao usuário logado
-    const checkOwnership = await pool.query('SELECT 1 FROM categorias WHERE id = $1 AND usuario_id = $2', [id, usuario_id]);
-    if (checkOwnership.rows.length === 0) {
-      return res.status(403).json({ message: 'Acesso negado ou categoria não encontrada para este usuário.' });
+    const authorized = await categoryModel.categoryBelongsToUser(id, usuario_id);
+    if (!authorized) {
+      return res.status(403).json({ message: 'Acesso negado ou categoria não encontrada.' });
     }
 
-    const query = 'DELETE FROM categorias WHERE id = $1 AND usuario_id = $2 RETURNING *';
-    const values = [id, usuario_id];
-
-    const result = await pool.query(query, values);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Categoria não encontrada.' }); // Geralmente não deve acontecer após checkOwnership
-    }
+    await categoryModel.deleteCategory(id, usuario_id);
     res.status(200).json({ message: 'Categoria excluída com sucesso!' });
   } catch (err) {
     res.status(500).json({ error: err.message });

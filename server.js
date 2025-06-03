@@ -15,8 +15,8 @@ const port = 3001;
 app.use(cors());
 app.use(bodyParser.json()); 
 
-// AQUI ESTÁ A CORREÇÃO: Passando a variável 'routes'
-app.use('/', routes); // Isso faz com que as rotas definidas em routes/index.js sejam acessíveis diretamente
+
+app.use('/', routes); 
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => {
