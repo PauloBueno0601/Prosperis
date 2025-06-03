@@ -1,4 +1,4 @@
-const accountModel = require('../models/accountModel');
+const accountModel = require('../models/contaModel');
 
 exports.createAccount = async (req, res) => {
   const { nome, saldo } = req.body;
