@@ -64,9 +64,12 @@
     </section>
   </main>
 
+  <!-- Carrega as dependências primeiro -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/js/dashboard.js"></script>
+  
+  <!-- Carrega o script principal como módulo -->
+  <script type="module" src="/scripts/dashboard.js"></script>
 
   <script>
     document.getElementById('logout-btn').addEventListener('click', async () => {

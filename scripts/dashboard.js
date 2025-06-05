@@ -1,7 +1,12 @@
-const SUPABASE_URL = 'https://wlhukywhzwbjkjjezdhu.supabase.co';  // pega no painel do Supabase
-const SUPABASE_ANON_KEY = '<eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsaHVreXdoendiamtqamV6ZGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5MzM2NjEsImV4cCI6MjA2MTUwOTY2MX0.I-dSMpzPLcF_0TboB6IcwB1xWimitol05N0QOUfB7TY';           // também pega lá
+// Importa a biblioteca do Supabase
+import { createClient } from '@supabase/supabase-js';
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_URL = 'https://wlhukywhzwbjkjjezdhu.supabase.co';  // pega no painel do Supabase
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsaHVreXdoendiamtqamV6ZGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5MzM2NjEsImV4cCI6MjA2MTUwOTY2MX0.I-dSMpzPLcF_0TboB6IcwB1xWimitol05N0QOUfB7TY';           // também pega lá
+
+// Inicializa o cliente Supabase
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // Dados iniciais
 let transactions = [];
 let balance = 0; // Saldo inicial zerado
