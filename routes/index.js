@@ -1,6 +1,5 @@
-// routes/index.js
 const express = require('express');
-const router = express.Router(); 
+const router = express.Router();
 
 // Importe seus controladores
 const {
@@ -19,52 +18,53 @@ const {
   createTransaction, getAllTransactions, getTransactionById, updateTransaction, deleteTransaction
 } = require('../controllers/TransacaoController');
 
-// Importe o middleware de autenticação
-const authenticateToken = require('../middleware/auth'); 
+// Importe o novo middleware de autenticação via session
+const authenticateSession = require('../middleware/auth.js');
 
-
+// Rota raiz redirecionando para /login
 router.get('/', (req, res) => {
-    res.status(200).json({ 
-        message: 'Bem-vindo à Prosperis!',
-        endpoints: {
-            usuarios: '/usuarios',
-            categorias: '/categorias',
-            contas: '/contas',
-            transacoes: '/transacoes',
-        }
-    });
+  res.redirect('/login');
 });
 
+// Página de login (renderizada com EJS)
+router.get('/login', (req, res) => {
+  res.render('pages/login');
+});
+
+// Página de dashboard (protegida por autenticação via session)
+router.get('/dashboard', authenticateSession, (req, res) => {
+  res.render('pages/dashboard', { user: req.session.user });
+});
 
 // Rotas de autenticação (não protegidas)
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 
-// Rotas de usuários (PROTEGIDAS)
-router.get('/users', authenticateToken, getAllUsers);
-router.get('/users/:id', authenticateToken, getUserById);
-router.put('/users/:id', authenticateToken, updateUser);
-router.delete('/users/:id', authenticateToken, deleteUser);
+// Rotas de usuários (protegidas)
+router.get('/users', authenticateSession, getAllUsers);
+router.get('/users/:id', authenticateSession, getUserById);
+router.put('/users/:id', authenticateSession, updateUser);
+router.delete('/users/:id', authenticateSession, deleteUser);
 
-// Rotas de categorias (AGORA PROTEGIDAS NOVAMENTE)
-router.post('/categorias', authenticateToken, createCategory);
-router.get('/categorias', authenticateToken, getAllCategories);
-router.get('/categorias/:id', authenticateToken, getCategoryById);
-router.put('/categorias/:id', authenticateToken, updateCategory);
-router.delete('/categorias/:id', authenticateToken, deleteCategory);
+// Rotas de categorias (protegidas)
+router.post('/categorias', authenticateSession, createCategory);
+router.get('/categorias', authenticateSession, getAllCategories);
+router.get('/categorias/:id', authenticateSession, getCategoryById);
+router.put('/categorias/:id', authenticateSession, updateCategory);
+router.delete('/categorias/:id', authenticateSession, deleteCategory);
 
-// Rotas de contas (AGORA PROTEGIDAS NOVAMENTE)
-router.post('/contas', authenticateToken, createAccount);
-router.get('/contas', authenticateToken, getAllAccounts);
-router.get('/contas/:id', authenticateToken, getAccountById);
-router.put('/contas/:id', authenticateToken, updateAccount);
-router.delete('/contas/:id', authenticateToken, deleteAccount);
+// Rotas de contas (protegidas)
+router.post('/contas', authenticateSession, createAccount);
+router.get('/contas', authenticateSession, getAllAccounts);
+router.get('/contas/:id', authenticateSession, getAccountById);
+router.put('/contas/:id', authenticateSession, updateAccount);
+router.delete('/contas/:id', authenticateSession, deleteAccount);
 
-// Rotas de transações (AGORA PROTEGIDAS NOVAMENTE)
-router.post('/transacoes', authenticateToken, createTransaction);
-router.get('/transacoes', authenticateToken, getAllTransactions);
-router.get('/transacoes/:id', authenticateToken, getTransactionById);
-router.put('/transacoes/:id', authenticateToken, updateTransaction);
-router.delete('/transacoes/:id', authenticateToken, deleteTransaction);
+// Rotas de transações (protegidas)
+router.post('/transacoes', authenticateSession, createTransaction);
+router.get('/transacoes', authenticateSession, getAllTransactions);
+router.get('/transacoes/:id', authenticateSession, getTransactionById);
+router.put('/transacoes/:id', authenticateSession, updateTransaction);
+router.delete('/transacoes/:id', authenticateSession, deleteTransaction);
 
 module.exports = router;

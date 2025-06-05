@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - Prosperis</title>
+  <link rel="stylesheet" href="/css/login.css" />
+</head>
+<body>
+  <div class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-8 animate-fade-in">
+        <h1 class="text-4xl font-bold text-primary-900 mb-2">Prosperis</h1>
+        <p class="text-gray-600">Seu controle financeiro inteligente</p>
+      </div>
+
+      <div class="card shadow-2xl border-0 animate-slide-in">
+        <div class="card-header text-center">
+          <h2 class="text-2xl font-bold">Acesse sua conta</h2>
+          <p class="text-gray-600">Entre ou crie uma conta para gerenciar suas finanças</p>
+        </div>
+        <div class="card-content">
+          <div class="tabs">
+            <div class="tabs-list grid grid-cols-2 mb-6">
+              <button class="tabs-trigger active" data-tab="login">Entrar</button>
+              <button class="tabs-trigger" data-tab="register">Cadastrar</button>
+            </div>
+
+            <div id="login" class="tabs-content active">
+              <form id="login-form" class="space-y-4">
+                <div>
+                  <label for="email" class="label">Email</label>
+                  <input id="email" type="email" placeholder="seu@email.com" class="input mt-1" required />
+                </div>
+                <div>
+                  <label for="password" class="label">Senha</label>
+                  <input id="password" type="password" placeholder="Sua senha" class="input mt-1" required />
+                </div>
+                <button type="submit" class="button w-full bg-primary-800 hover:bg-primary-900">
+                  Entrar
+                </button>
+              </form>
+            </div>
+
+            <div id="register" class="tabs-content hidden">
+              <form id="register-form" class="space-y-4">
+                <div>
+                  <label for="nome" class="label">Nome completo</label>
+                  <input id="nome" type="text" placeholder="Seu nome" class="input mt-1" required />
+                </div>
+                <div>
+                  <label for="register-email" class="label">Email</label>
+                  <input id="register-email" type="email" placeholder="seu@email.com" class="input mt-1" required />
+                </div>
+                <div>
+                  <label for="register-password" class="label">Senha</label>
+                  <input id="register-password" type="password" placeholder="Sua senha" class="input mt-1" required />
+                </div>
+                <div>
+                  <label for="confirm-password" class="label">Confirmar senha</label>
+                  <input id="confirm-password" type="password" placeholder="Confirme sua senha" class="input mt-1" required />
+                </div>
+                <button type="submit" class="button w-full bg-success hover:bg-success-700">
+                  Criar conta
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/scripts/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard - Prosperis</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+  <header class="header">
+    <h1>Bem-vindo, <span id="user-name"></span>!</h1>
+    <button id="logout-btn">Sair</button>
+  </header>
+
+  <main class="container">
+    <section class="cards">
+      <div class="card">
+        <h3>Saldo Atual</h3>
+        <p id="balance">R$ 0,00</p>
+      </div>
+
+      <div class="card income">
+        <h3>Receitas</h3>
+        <p id="income">R$ 0,00</p>
+      </div>
+
+      <div class="card expense">
+        <h3>Despesas</h3>
+        <p id="expenses">R$ 0,00</p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="left">
+        <form id="transaction-form">
+          <input type="text" id="description" placeholder="Descrição" required>
+          <input type="number" id="amount" placeholder="Valor (use negativo para despesas)" required>
+          <input type="text" id="category" placeholder="Categoria" required>
+          <select id="type">
+            <option value="income">Receita</option>
+            <option value="expense">Despesa</option>
+          </select>
+          <button type="submit">Adicionar</button>
+        </form>
+
+        <canvas id="financial-chart"></canvas>
+      </div>
+
+      <div class="right">
+        <h3>Transações</h3>
+        <ul id="transaction-list"></ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
