@@ -71,7 +71,8 @@ body {
 }
 
 .shadow-2xl {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .border-0 {
@@ -88,6 +89,13 @@ body {
 
 .card-content {
   padding: 1.5rem;
+  /* **CORREÇÃO PRINCIPAL PARA O "PULO"** */
+  /* Define uma altura mínima que acomode o formulário de Cadastro (o maior) */
+  /* Ajuste este valor se seus formulários forem ainda maiores ou menores */
+  min-height: 420px; /* Ajuste cuidadoso: 420px geralmente é o suficiente para o formulário de cadastro */
+  display: flex; /* Garante que o conteúdo interno se alinhe */
+  flex-direction: column; /* Para empilhar os conteúdos se for o caso */
+  justify-content: flex-start; /* Alinha o conteúdo ao topo */
 }
 
 .tabs-list {
@@ -102,29 +110,52 @@ body {
   background: #e5e7eb;
   cursor: pointer;
   font-size: 1rem;
-  transition: background 0.3s, color 0.3s;
+  transition: background 0.3s, color 0.3s, font-weight 0.3s, border-bottom 0.3s;
+  /* Garante que os cantos arredondados sejam respeitados */
+  border-radius: 0.5rem 0.5rem 0 0; /* Arredonda apenas os cantos superiores */
 }
+
+.tabs-trigger:first-child {
+  border-top-right-radius: 0; /* Corrige arredondamento */
+}
+
+.tabs-trigger:last-child {
+  border-top-left-radius: 0; /* Corrige arredondamento */
+}
+
 
 .tabs-trigger.active {
-  background: #1a365d;
-  color: #fff;
+  background: #1a365d; /* Fundo escuro */
+  color: #fff; /* Texto branco */
+  font-weight: bold;
+  /* **CORREÇÃO PARA A COR DO BOTÃO ATIVO** */
+  /* A borda azul que você queria */
+  border-bottom: 2px solid #007bff; /* Um azul mais vibrante e padrão */
 }
 
-.tabs-trigger:hover {
-  background: #2b4c7e;
-  color: #fff;
+/* Evita que o hover altere a cor do texto quando a aba já está ativa */
+.tabs-trigger.active:hover {
+  background: #1a365d; /* Mantém o mesmo background */
+  color: #fff; /* Mantém o mesmo texto */
 }
+
+/* Hover para as abas INATIVAS */
+.tabs-trigger:not(.active):hover {
+  background: #d1d5db; /* Um cinza mais claro no hover de abas inativas */
+  color: #374151; /* Cor de texto mais escura para contraste */
+}
+
 
 .tabs-content {
-  display: none;
-}
-
-.tabs-content.active {
-  display: block;
+  display: block; /* Visível por padrão no CSS */
+  /* Adicionado: Transição para suavizar a entrada/saída do conteúdo */
+  transition: opacity 0.3s ease-in-out;
+  flex-grow: 1; /* Permite que o conteúdo ocupe o espaço disponível */
 }
 
 .hidden {
   display: none;
+  opacity: 0; /* Ajuda na transição de fade-out */
 }
 
 .space-y-4 > * + * {
@@ -146,6 +177,7 @@ body {
   border-radius: 0.375rem;
   font-size: 1rem;
   line-height: 1.5;
+  background-color: #fff;
 }
 
 .input:focus {
@@ -164,7 +196,11 @@ body {
   border-radius: 0.375rem;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-2px);
 }
 
 .button:disabled {
@@ -172,17 +208,13 @@ body {
   cursor: not-allowed;
 }
 
-.w-full {
-  width: 100%;
-}
-
 .bg-primary-800 {
-  background: #1a365d;
+  background: #8098b8; /* Seu azul de botão atual */
   color: #fff;
 }
 
 .bg-primary-800:hover:not(:disabled) {
-  background: #153152;
+  background: #153152; /* Um azul mais escuro no hover */
 }
 
 .bg-success {

@@ -1,165 +1,203 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login - Prosperis</title>
-  <link rel="stylesheet" href="/css/login.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - Prosperis</title>
+    <link rel="stylesheet" href="/css/login.css" />
+    <style>
+        /*
+         * As regras de estilo para .tabs-content.hidden e .tabs-trigger.active
+         * serão movidas para o arquivo login.css para melhor organização.
+         * Mantenha este bloco <style> apenas para testes rápidos ou remova-o.
+         */
+    </style>
 </head>
 <body>
-  <div class="min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
-      <div class="text-center mb-8 animate-fade-in">
-        <h1 class="text-4xl font-bold text-primary-900 mb-2">Prosperis</h1>
-        <p class="text-gray-600">Seu controle financeiro inteligente</p>
-      </div>
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <div class="text-center mb-8 animate-fade-in">
+                <h1 class="text-4xl font-bold text-primary-900 mb-2">Prosperis</h1>
+                <p class="text-gray-600">Seu controle financeiro inteligente</p>
+            </div>
 
-      <div class="card shadow-2xl border-0 animate-slide-in">
-        <div class="card-header text-center">
-          <h2 class="text-2xl font-bold">Acesse sua conta</h2>
-          <p class="text-gray-600">Entre ou crie uma conta para gerenciar suas finanças</p>
+            <div class="card shadow-2xl border-0 animate-slide-in">
+                <div class="card-header text-center">
+                    <h2 class="text-2xl font-bold">Acesse sua conta</h2>
+                    <p class="text-gray-600">Entre ou crie uma conta para gerenciar suas finanças</p>
+                </div>
+
+                <div class="card-content">
+                    <div class="tabs">
+                        <div class="tabs-list grid grid-cols-2 mb-6">
+                            <button class="tabs-trigger active" data-tab="login">Entrar</button>
+                            <button class="tabs-trigger" data-tab="register">Cadastrar</button>
+                        </div>
+
+                        <div id="login" class="tabs-content">
+                            <form id="login-form" class="space-y-4">
+                                <div>
+                                    <label for="email" class="label">Email</label>
+                                    <input id="email" type="email" placeholder="seu@email.com" class="input mt-1" required />
+                                </div>
+                                <div>
+                                    <label for="password" class="label">Senha</label>
+                                    <input id="password" type="password" placeholder="Sua senha" class="input mt-1" required />
+                                </div>
+                                <div id="login-error" class="text-red-500 text-sm"></div>
+                                <button type="submit" class="button w-full bg-primary-800 hover:bg-primary-900">
+                                    Entrar
+                                </button>
+                            </form>
+                        </div>
+
+                        <div id="register" class="tabs-content hidden">
+                            <form id="register-form" class="space-y-4">
+                                <div>
+                                    <label for="nome" class="label">Nome completo</label>
+                                    <input id="nome" type="text" placeholder="Seu nome" class="input mt-1" required />
+                                </div>
+                                <div>
+                                    <label for="register-email" class="label">Email</label>
+                                    <input id="register-email" type="email" placeholder="seu@email.com" class="input mt-1" required />
+                                </div>
+                                <div>
+                                    <label for="register-password" class="label">Senha</label>
+                                    <input id="register-password" type="password" placeholder="Sua senha" class="input mt-1" required />
+                                </div>
+                                <div>
+                                    <label for="confirm-password" class="label">Confirmar senha</label>
+                                    <input id="confirm-password" type="password" placeholder="Confirme sua senha" class="input mt-1" required />
+                                </div>
+                                <div id="register-message" class="text-sm"></div>
+                                <button type="submit" class="button w-full bg-success hover:bg-success-700">
+                                    Criar conta
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-content">
-          <div class="tabs">
-            <div class="tabs-list grid grid-cols-2 mb-6">
-              <button class="tabs-trigger active" data-tab="login">Entrar</button>
-              <button class="tabs-trigger" data-tab="register">Cadastrar</button>
-            </div>
-
-            <div id="login" class="tabs-content active">
-              <form id="login-form" class="space-y-4">
-                <div>
-                  <label for="email" class="label">Email</label>
-                  <input id="email" type="email" placeholder="seu@email.com" class="input mt-1" required />
-                </div>
-                <div>
-                  <label for="password" class="label">Senha</label>
-                  <input id="password" type="password" placeholder="Sua senha" class="input mt-1" required />
-                </div>
-                <div id="login-error" class="text-red-500 text-sm"></div>
-                <button type="submit" class="button w-full bg-primary-800 hover:bg-primary-900">
-                  Entrar
-                </button>
-              </form>
-            </div>
-
-            <div id="register" class="tabs-content hidden">
-              <form id="register-form" class="space-y-4">
-                <div>
-                  <label for="nome" class="label">Nome completo</label>
-                  <input id="nome" type="text" placeholder="Seu nome" class="input mt-1" required />
-                </div>
-                <div>
-                  <label for="register-email" class="label">Email</label>
-                  <input id="register-email" type="email" placeholder="seu@email.com" class="input mt-1" required />
-                </div>
-                <div>
-                  <label for="register-password" class="label">Senha</label>
-                  <input id="register-password" type="password" placeholder="Sua senha" class="input mt-1" required />
-                </div>
-                <div>
-                  <label for="confirm-password" class="label">Confirmar senha</label>
-                  <input id="confirm-password" type="password" placeholder="Confirme sua senha" class="input mt-1" required />
-                </div>
-                <div id="register-message" class="text-sm"></div>
-                <button type="submit" class="button w-full bg-success hover:bg-success-700">
-                  Criar conta
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <script>
-    // Troca de abas
-    const triggers = document.querySelectorAll('.tabs-trigger');
-    const contents = document.querySelectorAll('.tabs-content');
+    <script>
+        // Troca de abas
+        const triggers = document.querySelectorAll('.tabs-trigger');
+        const contents = document.querySelectorAll('.tabs-content');
 
-    triggers.forEach(trigger => {
-      trigger.addEventListener('click', () => {
-        triggers.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.add('hidden'));
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                // Remove 'active' de todos os botões
+                triggers.forEach(t => t.classList.remove('active'));
 
-        trigger.classList.add('active');
-        const tab = trigger.getAttribute('data-tab');
-        document.getElementById(tab).classList.remove('hidden');
-        document.getElementById(tab).classList.add('active');
-      });
-    });
+                // Esconde todas as abas
+                contents.forEach(c => c.classList.add('hidden'));
 
-    // Login
-    document.getElementById('login-form').addEventListener('submit', async function (e) {
-      e.preventDefault();
+                // Ativa botão clicado
+                trigger.classList.add('active');
 
-      const email = document.getElementById('email').value;
-      const senha = document.getElementById('password').value;
-      const errorDiv = document.getElementById('login-error');
-      errorDiv.textContent = '';
-
-      try {
-        const res = await fetch('/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, senha })
+                // Mostra conteúdo correspondente
+                const tab = trigger.getAttribute('data-tab');
+                document.getElementById(tab).classList.remove('hidden');
+            });
         });
 
-        const data = await res.json();
+        // Login
+        document.getElementById('login-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-        if (res.ok) {
-          window.location.href = '/dashboard';
-        } else {
-          errorDiv.textContent = data.error || 'Erro ao fazer login.';
-        }
-      } catch (err) {
-        errorDiv.textContent = 'Erro de conexão.';
-      }
-    });
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('password').value;
+            const loginButton = e.target.querySelector('button[type="submit"]');
+            const errorDiv = document.getElementById('login-error');
 
-    // Cadastro
-    document.getElementById('register-form').addEventListener('submit', async function (e) {
-      e.preventDefault();
+            loginButton.textContent = 'Entrando...';
+            loginButton.disabled = true;
+            errorDiv.textContent = ''; // Limpa a mensagem de erro anterior
 
-      const nome = document.getElementById('nome').value;
-      const email = document.getElementById('register-email').value;
-      const senha = document.getElementById('register-password').value;
-      const confirmSenha = document.getElementById('confirm-password').value;
-      const messageDiv = document.getElementById('register-message');
+            try {
+                const res = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
 
-      messageDiv.textContent = '';
-      messageDiv.classList.remove('text-red-500', 'text-green-500');
+                // Se o servidor redirecionar, seguir o redirecionamento
+                if (res.redirected) {
+                    window.location.href = res.url;
+                    return; // Sai da função
+                }
 
-      if (senha !== confirmSenha) {
-        messageDiv.textContent = 'As senhas não coincidem.';
-        messageDiv.classList.add('text-red-500');
-        return;
-      }
+                const data = await res.json();
 
-      try {
-        const res = await fetch('/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nome, email, senha })
+                if (res.ok) {
+                    window.location.href = '/dashboard'; // Redireciona para o dashboard se o login for bem-sucedido
+                } else {
+                    errorDiv.textContent = data.error || 'Erro ao fazer login. Verifique suas credenciais.';
+                }
+            } catch (err) {
+                console.error('Erro de conexão ou no fetch:', err);
+                errorDiv.textContent = 'Erro de conexão. Tente novamente.';
+            } finally {
+                loginButton.textContent = 'Entrar';
+                loginButton.disabled = false;
+            }
         });
 
-        const data = await res.json();
+        // Cadastro
+        document.getElementById('register-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-        if (res.ok) {
-          messageDiv.textContent = 'Conta criada com sucesso!';
-          messageDiv.classList.add('text-green-500');
-        } else {
-          messageDiv.textContent = data.error || 'Erro ao criar conta.';
-          messageDiv.classList.add('text-red-500');
-        }
-      } catch (err) {
-        messageDiv.textContent = 'Erro de conexão.';
-        messageDiv.classList.add('text-red-500');
-      }
-    });
-  </script>
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('register-email').value;
+            const senha = document.getElementById('register-password').value;
+            const confirmSenha = document.getElementById('confirm-password').value;
+            const registerButton = e.target.querySelector('button[type="submit"]');
+            const messageDiv = document.getElementById('register-message');
 
-  <script src="/scripts/script.js"></script>
+            registerButton.textContent = 'Criando conta...';
+            registerButton.disabled = true;
+            messageDiv.textContent = ''; // Limpa a mensagem anterior
+            messageDiv.classList.remove('text-red-500', 'text-green-500');
+
+            if (senha !== confirmSenha) {
+                messageDiv.textContent = 'As senhas não coincidem.';
+                messageDiv.classList.add('text-red-500');
+                registerButton.textContent = 'Criar conta';
+                registerButton.disabled = false;
+                return;
+            }
+
+            try {
+                const res = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, email, senha })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    messageDiv.textContent = 'Conta criada com sucesso! Faça login.';
+                    messageDiv.classList.add('text-green-500');
+                    // Opcional: Voltar para a aba de login após o cadastro
+                    // document.querySelector('.tabs-trigger[data-tab="login"]').click();
+                } else {
+                    messageDiv.textContent = data.error || 'Erro ao criar conta. Tente novamente.';
+                    messageDiv.classList.add('text-red-500');
+                }
+            } catch (err) {
+                console.error('Erro de conexão ou no fetch:', err);
+                messageDiv.textContent = 'Erro de conexão. Tente novamente.';
+                messageDiv.classList.add('text-red-500');
+            } finally {
+                registerButton.textContent = 'Criar conta';
+                registerButton.disabled = false;
+            }
+        });
+    </script>
+
+    <script src="/scripts/script.js"></script>
 </body>
 </html>

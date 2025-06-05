@@ -1,7 +1,8 @@
+// routes/index.js
 const express = require('express');
 const router = express.Router();
 
-// Importe seus controladores
+// Controllers
 const {
   registerUser, loginUser, getAllUsers, getUserById, updateUser, deleteUser
 } = require('../controllers/UsuarioController');
@@ -18,49 +19,69 @@ const {
   createTransaction, getAllTransactions, getTransactionById, updateTransaction, deleteTransaction
 } = require('../controllers/TransacaoController');
 
-// Importe o novo middleware de autenticação via session
+// Models para o dashboard
+const categoriaModel = require('../models/categoriaModel');
+const contaModel = require('../models/contaModel');
+const transacaoModel = require('../models/transacaoModel');
+
+// Middleware
 const authenticateSession = require('../middleware/auth.js');
 
-// Rota raiz redirecionando para /login
+// Rota raiz
 router.get('/', (req, res) => {
   res.redirect('/login');
 });
 
-// Página de login (renderizada com EJS)
+// Login page
 router.get('/login', (req, res) => {
   res.render('pages/login');
 });
 
-// Página de dashboard (protegida por autenticação via session)
-router.get('/dashboard', authenticateSession, (req, res) => {
-  res.render('pages/dashboard', { user: req.session.user });
+// Dashboard com dados do banco
+router.get('/dashboard', authenticateSession, async (req, res) => {
+  const usuarioId = req.session.user.id;
+
+  try {
+    const contas = await contaModel.getAllAccounts(usuarioId);
+    const categorias = await categoriaModel.getAllCategories(usuarioId);
+    const transacoes = await transacaoModel.getAll(usuarioId);
+
+    res.render('pages/dashboard', {
+      user: req.session.user,
+      contas,
+      categorias,
+      transacoes
+    });
+  } catch (err) {
+    res.status(500).send('Erro ao carregar o dashboard: ' + err.message);
+  }
 });
 
-// Rotas de autenticação (não protegidas)
+// Auth
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 
-// Rotas de usuários (protegidas)
+// Usuários
 router.get('/users', authenticateSession, getAllUsers);
 router.get('/users/:id', authenticateSession, getUserById);
 router.put('/users/:id', authenticateSession, updateUser);
 router.delete('/users/:id', authenticateSession, deleteUser);
 
-// Rotas de categorias (protegidas)
+// Categorias
 router.post('/categorias', authenticateSession, createCategory);
 router.get('/categorias', authenticateSession, getAllCategories);
 router.get('/categorias/:id', authenticateSession, getCategoryById);
 router.put('/categorias/:id', authenticateSession, updateCategory);
 router.delete('/categorias/:id', authenticateSession, deleteCategory);
 
-// Rotas de contas (protegidas)
+// Contas
 router.post('/contas', authenticateSession, createAccount);
 router.get('/contas', authenticateSession, getAllAccounts);
 router.get('/contas/:id', authenticateSession, getAccountById);
 router.put('/contas/:id', authenticateSession, updateAccount);
 router.delete('/contas/:id', authenticateSession, deleteAccount);
 
-// Rotas de transações (protegidas)
+// Transações
 router.post('/transacoes', authenticateSession, createTransaction);
 router.get('/transacoes', authenticateSession, getAllTransactions);
 router.get('/transacoes/:id', authenticateSession, getTransactionById);

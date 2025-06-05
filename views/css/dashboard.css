@@ -1,13 +1,13 @@
-/* Reset e variáveis */
+/* Reset e variáveis globais de estilo */
 :root {
-  --primary: #3498db;
-  --primary-dark: #2980b9;
-  --primary-light: #e3f2fd;
-  --secondary: #2c3e50;
-  --accent: #f39c12;
-  --success: #27ae60;
-  --danger: #e74c3c;
-  --gray-100: #f8f9fa;
+  --primary: #3498db; /* Cor primária */
+  --primary-dark: #2980b9; /* Variação escura da cor primária */
+  --primary-light: #e3f2fd; /* Variação clara da cor primária */
+  --secondary: #2c3e50; /* Cor secundária */
+  --accent: #f39c12; /* Cor de destaque */
+  --success: #27ae60; /* Cor para sucesso/receitas */
+  --danger: #e74c3c; /* Cor para perigo/despesas */
+  --gray-100: #f8f9fa; /* Tons de cinza */
   --gray-200: #e9ecef;
   --gray-300: #dee2e6;
   --gray-400: #ced4da;
@@ -16,127 +16,130 @@
   --gray-700: #495057;
   --gray-800: #343a40;
   --gray-900: #212529;
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombras */
   --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-  --radius: 8px;
-  --transition: all 0.3s ease;
+  --radius: 8px; /* Raio da borda padrão */
+  --transition: all 0.3s ease; /* Transição padrão */
 }
 
+/* Reset básico para todos os elementos */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Estilos do corpo da página */
 body {
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background-color: #f5f7fa;
-  color: var(--gray-800);
-  line-height: 1.6;
-  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; /* Fontes preferenciais */
+  background-color: #f5f7fa; /* Cor de fundo suave */
+  color: var(--gray-800); /* Cor do texto padrão */
+  line-height: 1.6; /* Altura da linha para melhor legibilidade */
+  min-height: 100vh; /* Altura mínima para ocupar toda a tela */
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Organiza o conteúdo em coluna (header, main, footer) */
 }
 
-/* Header */
+/* Estilos do Cabeçalho */
 .header {
-  background: linear-gradient(135deg, var(--secondary) 0%, #1a2530 100%);
-  color: white;
-  padding: 1.25rem 2rem;
+  background: linear-gradient(135deg, var(--secondary) 0%, #1a2530 100%); /* Fundo gradiente */
+  color: white; /* Cor do texto */
+  padding: 1.25rem 2rem; /* Espaçamento interno */
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: var(--shadow);
-  position: sticky;
+  justify-content: space-between; /* Alinha título à esquerda e botão à direita */
+  align-items: center; /* Centraliza verticalmente */
+  box-shadow: var(--shadow); /* Sombra sutil */
+  position: sticky; /* Mantém o header fixo no topo ao rolar */
   top: 0;
-  z-index: 100;
+  z-index: 100; /* Garante que o header fique sobre outros elementos */
 }
 
 .header h1 {
-  font-weight: 700;
-  font-size: 1.5rem;
-  letter-spacing: -0.02em;
+  font-weight: 700; /* Peso da fonte do título */
+  font-size: 1.5rem; /* Tamanho da fonte do título */
+  letter-spacing: -0.02em; /* Espaçamento entre letras */
 }
 
 .header #user-name {
-  color: var(--accent);
+  color: var(--accent); /* Cor de destaque para o nome do usuário */
   font-weight: 600;
 }
 
 .header button#logout-btn {
-  background-color: var(--danger);
-  border: none;
+  background-color: var(--danger); /* Cor de fundo do botão de sair */
+  border: none; /* Sem borda */
   color: white;
   padding: 0.6rem 1.2rem;
-  border-radius: var(--radius);
-  cursor: pointer;
+  border-radius: var(--radius); /* Bordas arredondadas */
+  cursor: pointer; /* Cursor de mãozinha */
   font-weight: 600;
-  transition: var(--transition);
-  box-shadow: 0 2px 4px rgba(231, 76, 60, 0.2);
+  transition: var(--transition); /* Transição suave para hover */
+  box-shadow: 0 2px 4px rgba(231, 76, 60, 0.2); /* Sombra para o botão */
 }
 
 .header button#logout-btn:hover {
-  background-color: #c0392b;
-  transform: translateY(-1px);
+  background-color: #c0392b; /* Cor ao passar o mouse */
+  transform: translateY(-1px); /* Efeito de levantar ao passar o mouse */
   box-shadow: 0 4px 6px rgba(231, 76, 60, 0.3);
 }
 
 .header button#logout-btn:active {
-  transform: translateY(0);
+  transform: translateY(0); /* Remove o efeito de levantar ao clicar */
 }
 
-/* Container principal */
+/* Container Principal */
 .container {
-  flex: 1;
-  max-width: 1280px;
-  margin: 1.5rem auto;
-  padding: 0 1.5rem;
+  flex: 1; /* Permite que o container ocupe o espaço restante */
+  max-width: 1280px; /* Largura máxima */
+  margin: 1.5rem auto; /* Centraliza na página com margens superior/inferior */
+  padding: 0 1.5rem; /* Espaçamento interno lateral */
   width: 100%;
 }
 
-/* Cards de saldo, receita e despesa */
+/* Cards de Resumo (Saldo, Receitas, Despesas) */
 .cards {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
+  display: flex; /* Organiza os cards em linha */
+  gap: 1.5rem; /* Espaço entre os cards */
+  margin-bottom: 2rem; /* Margem inferior */
+  flex-wrap: wrap; /* Permite que os cards quebrem para a próxima linha em telas menores */
 }
 
 .card {
-  background: white;
-  flex: 1 1 250px;
+  background: white; /* Fundo branco para os cards */
+  flex: 1 1 250px; /* Distribuição flexível, base de 250px, cresce e encolhe */
   padding: 1.75rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  text-align: center;
+  text-align: center; /* Centraliza o texto */
   transition: var(--transition);
-  border: 1px solid var(--gray-200);
-  position: relative;
-  overflow: hidden;
+  border: 1px solid var(--gray-200); /* Borda sutil */
+  position: relative; /* Para o pseudo-elemento ::before */
+  overflow: hidden; /* Garante que o ::before não saia do card */
 }
 
+/* Linha colorida no topo dos cards */
 .card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 4px;
-  background: var(--primary);
+  height: 4px; /* Altura da linha */
+  background: var(--primary); /* Cor padrão da linha */
 }
 
 .card.income::before {
-  background: var(--success);
+  background: var(--success); /* Cor para card de receita */
 }
 
 .card.expense::before {
-  background: var(--danger);
+  background: var(--danger); /* Cor para card de despesa */
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg); /* Sombra maior ao passar o mouse */
+  transform: translateY(-2px); /* Efeito de levantar */
 }
 
 .card h3 {
@@ -144,30 +147,30 @@ body {
   margin-bottom: 0.8rem;
   color: var(--gray-700);
   font-size: 1rem;
-  text-transform: uppercase;
+  text-transform: uppercase; /* Texto em maiúsculas */
   letter-spacing: 0.5px;
 }
 
 .card p {
-  font-size: 2rem;
+  font-size: 2rem; /* Tamanho grande para os valores */
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--gray-900);
 }
 
 .card.income p {
-  color: var(--success);
+  color: var(--success); /* Cor do valor de receita */
 }
 
 .card.expense p {
-  color: var(--danger);
+  color: var(--danger); /* Cor do valor de despesa */
 }
 
-/* Grid principal */
+/* Grid Principal (Formulário e Lista de Transações) */
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 1.5rem;
+  grid-template-columns: 1fr 1.2fr; /* Duas colunas, a da direita um pouco maior */
+  gap: 1.5rem; /* Espaço entre as colunas */
 }
 
 .left, .right {
@@ -180,25 +183,25 @@ body {
 
 .right {
   display: flex;
-  flex-direction: column;
-  max-height: 700px;
+  flex-direction: column; /* Para permitir que a lista de transações cresça e tenha scroll */
+  max-height: 700px; /* Altura máxima para a seção da direita, evitando que fique muito longa */
 }
 
-.right h3, .left h3 {
+.right h3, .left h3 { /* Títulos dentro das seções do grid */
   margin-bottom: 1.25rem;
   color: var(--gray-800);
   font-weight: 600;
   font-size: 1.25rem;
-  border-bottom: 2px solid var(--gray-200);
+  border-bottom: 2px solid var(--gray-200); /* Linha abaixo do título */
   padding-bottom: 0.75rem;
 }
 
-/* Formulário */
+/* Formulário de Transação */
 form#transaction-form {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  flex-direction: column; /* Campos um abaixo do outro */
+  gap: 1rem; /* Espaço entre os campos */
+  margin-bottom: 2rem; /* Margem abaixo do formulário, antes do gráfico */
 }
 
 form#transaction-form input,
@@ -208,19 +211,19 @@ form#transaction-form select {
   border: 1px solid var(--gray-300);
   font-size: 1rem;
   transition: var(--transition);
-  background-color: var(--gray-100);
+  background-color: var(--gray-100); /* Fundo sutil para os campos */
 }
 
 form#transaction-form input:focus,
 form#transaction-form select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
-  background-color: white;
+  outline: none; /* Remove o outline padrão */
+  border-color: var(--primary); /* Cor da borda ao focar */
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15); /* Sombra de foco sutil */
+  background-color: white; /* Fundo branco ao focar */
 }
 
 form#transaction-form input::placeholder {
-  color: var(--gray-500);
+  color: var(--gray-500); /* Cor do placeholder */
 }
 
 form#transaction-form button {
@@ -232,7 +235,7 @@ form#transaction-form button {
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
-  margin-top: 0.5rem;
+  margin-top: 0.5rem; /* Pequena margem acima do botão */
   box-shadow: 0 2px 4px rgba(41, 128, 185, 0.2);
 }
 
@@ -246,34 +249,35 @@ form#transaction-form button:active {
   transform: translateY(0);
 }
 
-/* Canvas gráfico */
-.p-6 {
+/* Container do Canvas do Gráfico */
+.p-6 { /* Classe utilitária para padding, usada no container do gráfico */
   padding: 1.5rem;
-  margin-top: 1.5rem;
+  margin-top: 1.5rem; /* Espaço acima do gráfico */
   border-radius: var(--radius);
   background-color: white;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--gray-200);
 }
 
-#financial-chart {
-  width: 100% !important;
-  height: 300px !important;
+#financial-chart { /* Estilo para o canvas do gráfico */
+  width: 100% !important; /* Garante que o gráfico ocupe toda a largura do container */
+  height: 300px !important; /* Altura fixa para o gráfico */
   margin-top: 0.5rem;
 }
 
-/* Lista de transações */
+/* Lista de Transações */
 .transaction-list {
-  list-style: none;
-  overflow-y: auto;
-  flex: 1;
-  border-top: 1px solid var(--gray-200);
+  list-style: none; /* Remove marcadores de lista */
+  overflow-y: auto; /* Adiciona scroll vertical se o conteúdo exceder a altura */
+  flex: 1; /* Permite que a lista ocupe o espaço restante na seção .right */
+  border-top: 1px solid var(--gray-200); /* Linha separadora acima da lista */
   padding-top: 1rem;
   margin-top: 0.5rem;
-  scrollbar-width: thin;
-  scrollbar-color: var(--gray-400) var(--gray-200);
+  scrollbar-width: thin; /* Para Firefox */
+  scrollbar-color: var(--gray-400) var(--gray-200); /* Para Firefox */
 }
 
+/* Scrollbar customizada para Webkit (Chrome, Safari) */
 .transaction-list::-webkit-scrollbar {
   width: 6px;
 }
@@ -290,22 +294,22 @@ form#transaction-form button:active {
 
 #transaction-list li {
   padding: 1rem;
-  border-bottom: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--gray-200); /* Linha separadora entre itens */
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 1rem;
   transition: var(--transition);
-  border-radius: var(--radius);
+  border-radius: var(--radius); /* Pequeno arredondamento para hover */
 }
 
 #transaction-list li:hover {
-  background-color: var(--gray-100);
+  background-color: var(--gray-100); /* Fundo ao passar o mouse */
 }
 
 #transaction-list li .transaction-details {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Descrição e categoria uma abaixo da outra */
 }
 
 #transaction-list li .description {
@@ -324,44 +328,44 @@ form#transaction-form button:active {
 }
 
 #transaction-list li.income .amount {
-  color: var(--success);
+  color: var(--success); /* Cor para valor de receita na lista */
 }
 
 #transaction-list li.expense .amount {
-  color: var(--danger);
+  color: var(--danger); /* Cor para valor de despesa na lista */
 }
 
 /* Responsividade */
-@media (max-width: 1024px) {
+@media (max-width: 1024px) { /* Tablets e telas menores */
   .container {
-    padding: 0 1rem;
+    padding: 0 1rem; /* Reduz o padding lateral */
   }
   
   .grid {
-    gap: 1.25rem;
+    gap: 1.25rem; /* Reduz o espaço entre as colunas do grid */
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 900px) { /* Tablets em modo retrato e celulares grandes */
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Coluna única para o grid */
   }
   
   .left, .right {
-    padding: 1.5rem;
+    padding: 1.5rem; /* Ajusta o padding interno das seções do grid */
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 640px) { /* Celulares */
   .header {
     padding: 1rem;
-    flex-direction: column;
+    flex-direction: column; /* Header em coluna */
     gap: 0.75rem;
-    text-align: center;
+    text-align: center; /* Centraliza o texto do header */
   }
   
   .cards {
-    flex-direction: column;
+    flex-direction: column; /* Cards de resumo em coluna */
   }
   
   .card {
@@ -371,7 +375,7 @@ form#transaction-form button:active {
   form#transaction-form input,
   form#transaction-form select,
   form#transaction-form button {
-    padding: 0.75rem;
+    padding: 0.75rem; /* Reduz o padding dos campos do formulário */
   }
 }
 
@@ -382,26 +386,27 @@ form#transaction-form button:active {
 }
 
 .cards .card {
-  animation: fadeIn 0.5s ease forwards;
+  animation: fadeIn 0.5s ease forwards; /* Aplica a animação aos cards de resumo */
 }
 
+/* Delay para cada card aparecer em sequência */
 .cards .card:nth-child(1) { animation-delay: 0.1s; }
 .cards .card:nth-child(2) { animation-delay: 0.2s; }
 .cards .card:nth-child(3) { animation-delay: 0.3s; }
 
-/* Utilitários */
+/* Classes Utilitárias */
 .hidden {
-  display: none !important;
+  display: none !important; /* Para esconder elementos */
 }
 
 .text-center {
   text-align: center;
 }
 
-.mt-2 {
+.mt-2 { /* Exemplo de classe para margem no topo */
   margin-top: 0.5rem;
 }
 
-.mb-2 {
+.mb-2 { /* Exemplo de classe para margem na base */
   margin-bottom: 0.5rem;
 }

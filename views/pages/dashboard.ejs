@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard - Prosperis</title>
   <link rel="stylesheet" href="/css/dashboard.css" />
-   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
-<link href="https://api.fontshare.com/v2/css?f[]=gopher@400,500,600,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f[]=gopher@400,500,600,700&display=swap" rel="stylesheet" />
 </head>
 <body>
   <header class="header">
-    <h1> Prosperis <span id="user-name"></span> Seu controle financeiro</h1>
+    <h1> Prosperis <span id="user-name"><%= user.nome %></span> - Seu controle financeiro</h1>
     <button id="logout-btn">Sair</button>
   </header>
 
@@ -34,15 +34,15 @@
       <div class="left">
         <form id="transaction-form">
           <input type="text" id="description" placeholder="Descrição" required />
-          <input type="number" id="amount" placeholder="Valor (use negativo para despesas)" required />
+          <input type="text" id="amount" placeholder="Valor (ex: 1.234,56)" required />
           <select id="category" required>
             <option value="" disabled selected>Selecione uma categoria</option>
             <option value="Alimentação">Alimentação</option>
             <option value="Transporte">Transporte</option>
-            <option value="Casa">Casa</option>
-            <option value="Saúde">Saúde</option>
-            <option value="Educação">Educação</option>
+            <option value="Salário">Salário</option>
             <option value="Lazer">Lazer</option>
+            <option value="Educação">Educação</option>
+            <option value="Saúde">Saúde</option>
             <option value="Outros">Outros</option>
           </select>
           <select id="type">
@@ -65,6 +65,14 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/js/dashboard.js"></script>
+
+  <script>
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await fetch('/logout', { method: 'POST' });
+      window.location.href = '/login';
+    });
+  </script>
 </body>
 </html>
