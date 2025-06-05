@@ -36,6 +36,7 @@
                   <label for="password" class="label">Senha</label>
                   <input id="password" type="password" placeholder="Sua senha" class="input mt-1" required />
                 </div>
+                <div id="login-error" class="text-red-500 text-sm"></div>
                 <button type="submit" class="button w-full bg-primary-800 hover:bg-primary-900">
                   Entrar
                 </button>
@@ -60,6 +61,7 @@
                   <label for="confirm-password" class="label">Confirmar senha</label>
                   <input id="confirm-password" type="password" placeholder="Confirme sua senha" class="input mt-1" required />
                 </div>
+                <div id="register-message" class="text-sm"></div>
                 <button type="submit" class="button w-full bg-success hover:bg-success-700">
                   Criar conta
                 </button>
@@ -70,6 +72,93 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Troca de abas
+    const triggers = document.querySelectorAll('.tabs-trigger');
+    const contents = document.querySelectorAll('.tabs-content');
+
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        triggers.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.add('hidden'));
+
+        trigger.classList.add('active');
+        const tab = trigger.getAttribute('data-tab');
+        document.getElementById(tab).classList.remove('hidden');
+        document.getElementById(tab).classList.add('active');
+      });
+    });
+
+    // Login
+    document.getElementById('login-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('password').value;
+      const errorDiv = document.getElementById('login-error');
+      errorDiv.textContent = '';
+
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, senha })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          window.location.href = '/dashboard';
+        } else {
+          errorDiv.textContent = data.error || 'Erro ao fazer login.';
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Erro de conexão.';
+      }
+    });
+
+    // Cadastro
+    document.getElementById('register-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('register-email').value;
+      const senha = document.getElementById('register-password').value;
+      const confirmSenha = document.getElementById('confirm-password').value;
+      const messageDiv = document.getElementById('register-message');
+
+      messageDiv.textContent = '';
+      messageDiv.classList.remove('text-red-500', 'text-green-500');
+
+      if (senha !== confirmSenha) {
+        messageDiv.textContent = 'As senhas não coincidem.';
+        messageDiv.classList.add('text-red-500');
+        return;
+      }
+
+      try {
+        const res = await fetch('/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, email, senha })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          messageDiv.textContent = 'Conta criada com sucesso!';
+          messageDiv.classList.add('text-green-500');
+        } else {
+          messageDiv.textContent = data.error || 'Erro ao criar conta.';
+          messageDiv.classList.add('text-red-500');
+        }
+      } catch (err) {
+        messageDiv.textContent = 'Erro de conexão.';
+        messageDiv.classList.add('text-red-500');
+      }
+    });
+  </script>
 
   <script src="/scripts/script.js"></script>
 </body>

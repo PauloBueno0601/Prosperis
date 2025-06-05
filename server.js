@@ -2,11 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const session = require('express-session'); // <- Importar express-session
+const session = require('express-session');
 
-const routes = require('./routes'); // index.js
-const pool = require('./config/database');
+const routes = require('./routes'); // Arquivo de rotas
+const pool = require('./config/database'); // Conexão com o banco de dados
 
+// Conexão com o banco de dados
 pool.connect()
   .then(() => console.log('Conectado ao banco de dados!'))
   .catch((err) => console.error('Erro ao conectar ao banco de dados:', err));
@@ -14,38 +15,39 @@ pool.connect()
 const app = express();
 const port = 3001;
 
-// View engine: EJS
+// Configura o motor de visualização EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Middleware para arquivos estáticos (CSS, imagens)
-app.use(express.static(path.join(__dirname, 'views')));
-app.use(express.static(path.join(__dirname, 'assets')));
-app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
+// Serve arquivos estáticos da pasta views/css (CSS)
+app.use('/css', express.static(path.join(__dirname, 'views/css')));
+
+// Serve arquivos estáticos da pasta scripts (JS)
+app.use('/js', express.static(path.join(__dirname, 'scripts')));
 
 // Middlewares
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true })); // Para forms HTML
+app.use(cors()); // Habilita CORS para requisições cruzadas
+app.use(bodyParser.json()); // Parseia JSON nas requisições
+app.use(bodyParser.urlencoded({ extended: true })); // Parseia dados de formulários
 
-// Configuração de sessão
+// Configuração da sessão
 app.use(session({
-  secret: 'sua_chave_secreta_super_segura',  // <- Troque por uma chave forte
+  secret: '010067', // TODO: Substitua por uma chave segura (ex.: crypto.randomBytes(32).toString('hex'))
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 60 * 60 * 1000 } // 1 hora
+  cookie: { maxAge: 60 * 60 * 1000 } // Duração da sessão: 1 hora
 }));
 
-// Middleware para expor o usuário logado nas views (opcional)
+// Expõe o usuário logado para as views
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   next();
 });
 
-// Rotas
+// Define as rotas
 app.use('/', routes);
 
-// Inicia o servidor
+// Inicia o servidor (exceto em ambiente de teste)
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);

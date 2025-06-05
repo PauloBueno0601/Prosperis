@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard - Prosperis</title>
-  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="/css/dashboard.css" />
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+<link href="https://api.fontshare.com/v2/css?f[]=gopher@400,500,600,700&display=swap" rel="stylesheet" />
 </head>
 <body>
-
   <header class="header">
-    <h1>Bem-vindo, <span id="user-name"></span>!</h1>
+    <h1> Prosperis <span id="user-name"></span> Seu controle financeiro</h1>
     <button id="logout-btn">Sair</button>
   </header>
 
@@ -19,12 +20,10 @@
         <h3>Saldo Atual</h3>
         <p id="balance">R$ 0,00</p>
       </div>
-
       <div class="card income">
         <h3>Receitas</h3>
         <p id="income">R$ 0,00</p>
       </div>
-
       <div class="card expense">
         <h3>Despesas</h3>
         <p id="expenses">R$ 0,00</p>
@@ -34,9 +33,18 @@
     <section class="grid">
       <div class="left">
         <form id="transaction-form">
-          <input type="text" id="description" placeholder="Descrição" required>
-          <input type="number" id="amount" placeholder="Valor (use negativo para despesas)" required>
-          <input type="text" id="category" placeholder="Categoria" required>
+          <input type="text" id="description" placeholder="Descrição" required />
+          <input type="number" id="amount" placeholder="Valor (use negativo para despesas)" required />
+          <select id="category" required>
+            <option value="" disabled selected>Selecione uma categoria</option>
+            <option value="Alimentação">Alimentação</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Casa">Casa</option>
+            <option value="Saúde">Saúde</option>
+            <option value="Educação">Educação</option>
+            <option value="Lazer">Lazer</option>
+            <option value="Outros">Outros</option>
+          </select>
           <select id="type">
             <option value="income">Receita</option>
             <option value="expense">Despesa</option>
@@ -44,17 +52,19 @@
           <button type="submit">Adicionar</button>
         </form>
 
-        <canvas id="financial-chart"></canvas>
+        <div class="p-6 bg-white rounded-lg shadow border border-gray-200">
+          <canvas id="financial-chart"></canvas>
+        </div>
       </div>
 
       <div class="right">
         <h3>Transações</h3>
-        <ul id="transaction-list"></ul>
+        <ul id="transaction-list" class="transaction-list"></ul>
       </div>
     </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="dashboard.js"></script>
+  <script src="/js/dashboard.js"></script>
 </body>
 </html>
