@@ -1,7 +1,7 @@
 const TransactionModel = require('../models/transacaoModel');
 
 exports.createTransaction = async (req, res) => {
-  const { descricao, valor, tipo, categoria_id, conta_id } = req.body;
+  const { descricao, valor, tipo, categoria_id, conta_id, data } = req.body;
   const usuario_id = req.user.id;
 
   if (!descricao || valor === undefined || isNaN(valor) || !tipo || !categoria_id || !conta_id) {
@@ -25,7 +25,8 @@ exports.createTransaction = async (req, res) => {
       tipo: tipo.toLowerCase(),
       categoria_id,
       conta_id,
-      usuario_id
+      usuario_id,
+      data: data ? new Date(data) : new Date()
     });
 
     res.status(201).json(nova);

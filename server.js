@@ -13,7 +13,7 @@ pool.connect()
   .catch((err) => console.error('Erro ao conectar ao banco de dados:', err));
 
 const app = express();
-const port = 3001;
+const PORT = process.env.PORT || 3002;
 
 // Configura o motor de visualização EJS
 app.set('view engine', 'ejs');
@@ -49,9 +49,9 @@ app.use('/', routes);
 
 // Inicia o servidor (exceto em ambiente de teste)
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(port, () => {
-    console.log(`Servidor rodando na porta ${port}`);
-    console.log(`Acesse → http://localhost:${port}/`);
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Acesse → http://localhost:${PORT}/`);
   });
 }
 

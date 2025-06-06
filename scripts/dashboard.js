@@ -165,10 +165,9 @@ document.getElementById('transaction-form').addEventListener('submit', async (e)
   const data = {
     descricao: document.getElementById('description').value.trim(),
     valor: parseFloat(document.getElementById('value').value.replace(/\./g, '').replace(',', '.')),
-    data: document.getElementById('date').value,
     tipo: document.getElementById('type').value,
-    categoria_id: document.getElementById('category').value,
-    conta_id: document.getElementById('account').value
+    categoria_id: parseInt(document.getElementById('category').value),
+    conta_id: parseInt(document.getElementById('account').value)
   };
   
   if (isNaN(data.valor)) {
@@ -183,7 +182,10 @@ document.getElementById('transaction-form').addEventListener('submit', async (e)
       body: JSON.stringify(data)
     });
     
-    if (!response.ok) throw new Error(`Erro ao ${isEdit ? 'atualizar' : 'criar'} transação`);
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || `Erro ao ${isEdit ? 'atualizar' : 'criar'} transação`);
+    }
     
     // Limpar formulário
     e.target.reset();
@@ -194,7 +196,7 @@ document.getElementById('transaction-form').addEventListener('submit', async (e)
     loadTransactions();
   } catch (err) {
     console.error('Erro:', err.message);
-    alert(`Erro ao ${isEdit ? 'atualizar' : 'criar'} transação`);
+    alert(err.message);
   }
 });
 
@@ -244,37 +246,38 @@ const modals = {
   account: document.getElementById('account-modal')
 };
 
+// Função para abrir modal
+function openModal(modal) {
+  modal.style.display = 'block';
+}
+
+// Função para fechar modal
+function closeModal(modal) {
+  modal.style.display = 'none';
+}
+
 // Botões de abrir modal
 document.getElementById('settings-btn').addEventListener('click', () => {
-  modals.settings.classList.add('active');
+  openModal(modals.settings);
   loadSettingsData();
-});
-
-document.getElementById('add-category-btn').addEventListener('click', () => {
-  modals.category.classList.add('active');
-});
-
-document.getElementById('add-account-btn').addEventListener('click', () => {
-  modals.account.classList.add('active');
 });
 
 // Botões de fechar modal
 document.querySelectorAll('.close-modal').forEach(btn => {
   btn.addEventListener('click', () => {
-    Object.values(modals).forEach(modal => modal.classList.remove('active'));
+    const modal = btn.closest('.modal');
+    closeModal(modal);
   });
 });
 
 // Fechar modal ao clicar fora
-Object.values(modals).forEach(modal => {
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.classList.remove('active');
-    }
-  });
+window.addEventListener('click', (e) => {
+  if (e.target.classList.contains('modal')) {
+    closeModal(e.target);
+  }
 });
 
-// Tabs de configurações
+// Gerenciamento de Tabs
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     // Remove active de todas as tabs
@@ -283,139 +286,21 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     
     // Adiciona active na tab clicada
     btn.classList.add('active');
-    document.getElementById(`${btn.dataset.tab}-tab`).classList.add('active');
+    const tabId = btn.dataset.tab + '-tab';
+    document.getElementById(tabId).classList.add('active');
   });
 });
 
-// Carregar dados das configurações
-async function loadSettingsData() {
-  try {
-    // Carregar categorias
-    const categoriasResponse = await fetch('/categorias');
-    if (!categoriasResponse.ok) throw new Error('Erro ao buscar categorias');
-    const categorias = await categoriasResponse.json();
-    
-    const categoriesList = document.getElementById('categories-list');
-    categoriesList.innerHTML = categorias.map(cat => `
-      <li>
-        <div class="item-info">
-          <span class="item-name">${cat.nome}</span>
-        </div>
-        <div class="item-actions">
-          <button class="btn-icon edit" data-id="${cat.id}">✏️</button>
-          <button class="btn-icon delete" data-id="${cat.id}">🗑️</button>
-        </div>
-      </li>
-    `).join('');
+// Botões de adicionar nova categoria/conta
+document.getElementById('add-category-btn').addEventListener('click', () => {
+  openModal(modals.category);
+});
 
-    // Carregar contas
-    const contasResponse = await fetch('/contas');
-    if (!contasResponse.ok) throw new Error('Erro ao buscar contas');
-    const contas = await contasResponse.json();
-    
-    const accountsList = document.getElementById('accounts-list');
-    accountsList.innerHTML = contas.map(conta => `
-      <li>
-        <div class="item-info">
-          <span class="item-name">${conta.nome}</span>
-          <span class="item-balance">Saldo: ${formatCurrency(conta.saldo)}</span>
-        </div>
-        <div class="item-actions">
-          <button class="btn-icon edit" data-id="${conta.id}">✏️</button>
-          <button class="btn-icon delete" data-id="${conta.id}">🗑️</button>
-        </div>
-      </li>
-    `).join('');
+document.getElementById('add-account-btn').addEventListener('click', () => {
+  openModal(modals.account);
+});
 
-    // Adicionar eventos aos botões de editar e excluir
-    addEditDeleteListeners();
-  } catch (err) {
-    console.error('Erro ao carregar dados:', err.message);
-    alert('Erro ao carregar dados das configurações');
-  }
-}
-
-// Adicionar eventos aos botões de editar e excluir
-function addEditDeleteListeners() {
-  // Editar categoria
-  document.querySelectorAll('#categories-list .btn-icon.edit').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const id = btn.dataset.id;
-      try {
-        const response = await fetch(`/categorias/${id}`);
-        if (!response.ok) throw new Error('Erro ao buscar categoria');
-        const categoria = await response.json();
-        
-        document.getElementById('category-name').value = categoria.nome;
-        modals.category.classList.add('active');
-        // TODO: Implementar edição
-      } catch (err) {
-        console.error('Erro:', err.message);
-        alert('Erro ao carregar categoria');
-      }
-    });
-  });
-
-  // Excluir categoria
-  document.querySelectorAll('#categories-list .btn-icon.delete').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      if (!confirm('Tem certeza que deseja excluir esta categoria?')) return;
-      
-      const id = btn.dataset.id;
-      try {
-        const response = await fetch(`/categorias/${id}`, { method: 'DELETE' });
-        if (!response.ok) throw new Error('Erro ao excluir categoria');
-        
-        loadSettingsData();
-        loadInitialData(); // Recarrega os selects do formulário
-      } catch (err) {
-        console.error('Erro:', err.message);
-        alert('Erro ao excluir categoria');
-      }
-    });
-  });
-
-  // Editar conta
-  document.querySelectorAll('#accounts-list .btn-icon.edit').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const id = btn.dataset.id;
-      try {
-        const response = await fetch(`/contas/${id}`);
-        if (!response.ok) throw new Error('Erro ao buscar conta');
-        const conta = await response.json();
-        
-        document.getElementById('account-name').value = conta.nome;
-        document.getElementById('account-balance').value = conta.saldo;
-        modals.account.classList.add('active');
-        // TODO: Implementar edição
-      } catch (err) {
-        console.error('Erro:', err.message);
-        alert('Erro ao carregar conta');
-      }
-    });
-  });
-
-  // Excluir conta
-  document.querySelectorAll('#accounts-list .btn-icon.delete').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      if (!confirm('Tem certeza que deseja excluir esta conta?')) return;
-      
-      const id = btn.dataset.id;
-      try {
-        const response = await fetch(`/contas/${id}`, { method: 'DELETE' });
-        if (!response.ok) throw new Error('Erro ao excluir conta');
-        
-        loadSettingsData();
-        loadInitialData(); // Recarrega os selects do formulário
-      } catch (err) {
-        console.error('Erro:', err.message);
-        alert('Erro ao excluir conta');
-      }
-    });
-  });
-}
-
-// Formulário de Nova Categoria
+// Formulário de categoria
 document.getElementById('category-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   
@@ -427,20 +312,22 @@ document.getElementById('category-form').addEventListener('submit', async (e) =>
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nome })
     });
-
-    if (!response.ok) throw new Error('Erro ao criar categoria');
-
-    modals.category.classList.remove('active');
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Erro ao criar categoria');
+    }
+    
     e.target.reset();
-    loadSettingsData();
-    loadInitialData(); // Recarrega os selects do formulário
+    closeModal(modals.category);
+    loadCategories();
   } catch (err) {
     console.error('Erro:', err.message);
-    alert('Erro ao criar categoria');
+    alert(err.message);
   }
 });
 
-// Formulário de Nova Conta
+// Formulário de conta
 document.getElementById('account-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   
@@ -448,56 +335,71 @@ document.getElementById('account-form').addEventListener('submit', async (e) => 
   const saldo = parseFloat(document.getElementById('account-balance').value.replace(/\./g, '').replace(',', '.'));
   
   if (isNaN(saldo)) {
-    alert('Por favor, insira um valor válido para o saldo');
+    alert('Por favor, insira um saldo válido');
     return;
   }
-
+  
   try {
     const response = await fetch('/contas', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nome, saldo })
     });
-
-    if (!response.ok) throw new Error('Erro ao criar conta');
-
-    modals.account.classList.remove('active');
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Erro ao criar conta');
+    }
+    
     e.target.reset();
-    loadSettingsData();
-    loadInitialData(); // Recarrega os selects do formulário
+    closeModal(modals.account);
+    loadAccounts();
   } catch (err) {
     console.error('Erro:', err.message);
-    alert('Erro ao criar conta');
+    alert(err.message);
   }
 });
 
-// Formulário de Perfil
+// Formulário de perfil
 document.getElementById('profile-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   
-  const nome = document.getElementById('profile-name').value.trim();
-  const email = document.getElementById('profile-email').value.trim();
-  const senha = document.getElementById('profile-password').value;
-
-  const data = { nome, email };
-  if (senha) data.senha = senha;
-
+  const data = {
+    nome: document.getElementById('profile-name').value.trim(),
+    email: document.getElementById('profile-email').value.trim(),
+    senha: document.getElementById('profile-password').value
+  };
+  
+  if (!data.senha) delete data.senha;
+  
   try {
     const response = await fetch('/usuarios/profile', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-
-    if (!response.ok) throw new Error('Erro ao atualizar perfil');
-
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Erro ao atualizar perfil');
+    }
+    
     alert('Perfil atualizado com sucesso!');
-    document.getElementById('user-name').textContent = nome;
+    loadUserData();
   } catch (err) {
     console.error('Erro:', err.message);
-    alert('Erro ao atualizar perfil');
+    alert(err.message);
   }
 });
+
+// Carregar dados das configurações
+async function loadSettingsData() {
+  await Promise.all([
+    loadCategories(),
+    loadAccounts(),
+    loadUserData()
+  ]);
+}
 
 // Carregar transações
 async function loadTransactions() {

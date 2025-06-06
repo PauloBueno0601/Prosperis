@@ -1,12 +1,12 @@
 const pool = require('../config/database');
 
 const TransactionModel = {
-  async create({ descricao, valor, tipo, categoria_id, conta_id, usuario_id }) {
+  async create({ descricao, valor, tipo, categoria_id, conta_id, usuario_id, data }) {
     const query = `
-      INSERT INTO transacoes (descricao, valor, tipo, categoria_id, conta_id, usuario_id)
-      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;
+      INSERT INTO transacoes (descricao, valor, tipo, categoria_id, conta_id, usuario_id, data_transacao)
+      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;
     `;
-    const values = [descricao, valor, tipo, categoria_id, conta_id, usuario_id];
+    const values = [descricao, valor, tipo, categoria_id, conta_id, usuario_id, data || new Date()];
     const result = await pool.query(query, values);
     return result.rows[0];
   },
