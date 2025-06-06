@@ -516,8 +516,8 @@ function addTransactionEditDeleteListeners() {
 // Carregar dados iniciais ao iniciar a página
 document.addEventListener('DOMContentLoaded', loadInitialData);
 
-// Inicializar gráfico
-function initializeChart() {
+// Inicializar gráfico de categorias
+function initializeCategoryChart() {
   const ctx = document.getElementById('chart').getContext('2d');
   
   // Agrupar transações por categoria
