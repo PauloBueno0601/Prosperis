@@ -61,6 +61,18 @@ router.get('/dashboard', authenticateSession, async (req, res) => {
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 
+// Logout
+router.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Erro ao encerrar a sessão:', err);
+      return res.status(500).send('Erro ao encerrar a sessão');
+    }
+    res.clearCookie('connect.sid'); // limpa o cookie da sessão
+    res.sendStatus(200); // sucesso
+  });
+});
+
 // Usuários
 router.get('/users', authenticateSession, getAllUsers);
 router.get('/users/:id', authenticateSession, getUserById);

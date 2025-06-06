@@ -1,12 +1,3 @@
-// Importa a biblioteca do Supabase
-import { createClient } from '@supabase/supabase-js';
-
-const SUPABASE_URL = 'https://wlhukywhzwbjkjjezdhu.supabase.co';  // pega no painel do Supabase
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsaHVreXdoendiamtqamV6ZGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5MzM2NjEsImV4cCI6MjA2MTUwOTY2MX0.I-dSMpzPLcF_0TboB6IcwB1xWimitol05N0QOUfB7TY';           // também pega lá
-
-// Inicializa o cliente Supabase
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 // Dados iniciais
 let transactions = [];
 let balance = 0; // Saldo inicial zerado
@@ -23,7 +14,7 @@ function updateTotals() {
     .reduce((acc, t) => acc + t.amount, 0);
   const totalExpenses = transactions
     .filter(t => t.type === 'expense')
-    .reduce((acc, t) => acc + t.amount, 0); // despesas negativas
+    .reduce((acc, t) => acc + t.amount, 0);
 
   balance = transactions.reduce((acc, t) => acc + t.amount, 0);
 
@@ -88,14 +79,8 @@ function initializeChart() {
       datasets: [{
         label: 'Resumo Financeiro',
         data: [incomeTotal, expenseTotal],
-        backgroundColor: [
-          'rgba(39, 174, 96, 0.7)',  // verde
-          'rgba(231, 76, 60, 0.7)'   // vermelho
-        ],
-        borderColor: [
-          'rgba(39, 174, 96, 1)',
-          'rgba(231, 76, 60, 1)'
-        ],
+        backgroundColor: ['rgba(39, 174, 96, 0.7)', 'rgba(231, 76, 60, 0.7)'],
+        borderColor: ['rgba(39, 174, 96, 1)', 'rgba(231, 76, 60, 1)'],
         borderWidth: 1
       }]
     },
@@ -111,10 +96,7 @@ function initializeChart() {
         }
       },
       plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-        },
+        legend: { display: true, position: 'top' },
         tooltip: {
           callbacks: {
             label: ctx => {
@@ -145,26 +127,20 @@ function updateChartData() {
   financialChart.update();
 }
 
-// Máscara para formatação do campo de valor em tempo real
+// Máscara para formatação do campo de valor
 const amountInput = document.getElementById('amount');
-
 amountInput.addEventListener('input', (e) => {
   let value = e.target.value;
-
-  // Remove tudo que não for número
   value = value.replace(/\D/g, '');
-
-  // Divide o número por 100 para colocar as casas decimais e formata para pt-BR
   value = (Number(value) / 100).toLocaleString('pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-
   e.target.value = value;
 });
 
-// Manipulador do formulário
-document.getElementById('transaction-form').addEventListener('submit', (e) => {
+// Manipulador do formulário — envia para seu backend
+document.getElementById('transaction-form').addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const description = document.getElementById('description').value.trim();
@@ -177,7 +153,6 @@ document.getElementById('transaction-form').addEventListener('submit', (e) => {
     return;
   }
 
-  // Converte string "1.234,56" para número 1234.56
   let amount = parseFloat(amountInputValue.replace(/\./g, '').replace(',', '.'));
   if (isNaN(amount)) {
     alert('Por favor, insira um valor numérico válido.');
@@ -185,26 +160,32 @@ document.getElementById('transaction-form').addEventListener('submit', (e) => {
   }
 
   amount = type === 'expense' ? -Math.abs(amount) : Math.abs(amount);
+  const date = new Date().toISOString();
 
-  const newTransaction = {
-    id: Date.now(),
-    description,
-    amount,
-    type,
-    category,
-    date: new Date().toLocaleDateString('pt-BR')
-  };
+  try {
+    const response = await fetch('/transacoes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description, amount, type, category, date })
+    });
 
-  transactions.unshift(newTransaction);
+    if (!response.ok) throw new Error('Erro ao adicionar transação');
 
-  updateTotals();
-  updateTransactionList();
-  updateChartData();
+    const data = await response.json();
+    transactions.unshift(data);
 
-  e.target.reset();
+    updateTotals();
+    updateTransactionList();
+    updateChartData();
+
+    e.target.reset();
+  } catch (err) {
+    console.error('Erro ao adicionar transação:', err.message);
+    alert('Erro ao adicionar transação no servidor');
+  }
 });
 
-// Botão logout - redireciona para login e reseta dados locais
+// Botão logout
 document.getElementById('logout-btn').addEventListener('click', () => {
   fetch('/logout', { method: 'POST' })
     .then(() => {
@@ -221,11 +202,20 @@ document.getElementById('logout-btn').addEventListener('click', () => {
     });
 });
 
-// Função para carregar dados iniciais (pode ser adaptada para buscar da API)
-function loadInitialData() {
-  updateTotals();
-  updateTransactionList();
-  initializeChart();
+// Carrega dados do backend ao iniciar
+async function loadInitialData() {
+  try {
+    const response = await fetch('/transacoes');
+    if (!response.ok) throw new Error('Erro ao buscar transações');
+    transactions = await response.json();
+
+    updateTotals();
+    updateTransactionList();
+    initializeChart();
+  } catch (err) {
+    console.error('Erro ao carregar transações:', err.message);
+    alert('Erro ao carregar as transações do servidor');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', loadInitialData);
