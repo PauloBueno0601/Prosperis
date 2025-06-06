@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const UserModel = require('../models/usuarioModel');
+const initUserData = require('../scripts/initUserData');
 
 // Registro de usuário - retorna JSON
 exports.registerUser = async (req, res) => {
@@ -18,8 +19,12 @@ exports.registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(senha, 10);
     const user = await UserModel.create({ nome, email, senha: hashedPassword });
 
+    // Inicializa categorias e contas padrão para o novo usuário
+    await initUserData(user.id);
+
     return res.status(201).json({ message: 'Usuário criado com sucesso.' });
   } catch (err) {
+    console.error('Erro ao registrar usuário:', err);
     return res.status(500).json({ error: 'Erro no servidor.' });
   }
 };
