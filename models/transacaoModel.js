@@ -12,7 +12,16 @@ const TransactionModel = {
   },
 
   async getAll(usuario_id) {
-    const query = 'SELECT * FROM transacoes WHERE usuario_id = $1 ORDER BY data DESC'; // CORRIGIDO AQUI
+    const query = `
+      SELECT t.*, 
+             c.nome as categoria_nome,
+             co.nome as conta_nome
+      FROM transacoes t
+      LEFT JOIN categorias c ON t.categoria_id = c.id
+      LEFT JOIN contas co ON t.conta_id = co.id
+      WHERE t.usuario_id = $1 
+      ORDER BY t.data_transacao DESC
+    `;
     const result = await pool.query(query, [usuario_id]);
     return result.rows;
   },

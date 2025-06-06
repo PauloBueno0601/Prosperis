@@ -25,9 +25,9 @@ function updateTotals() {
   
   balance = receitas - despesas;
   
-  document.getElementById('total-receitas').textContent = formatCurrency(receitas);
-  document.getElementById('total-despesas').textContent = formatCurrency(despesas);
-  document.getElementById('saldo').textContent = formatCurrency(balance);
+  document.getElementById('income').textContent = formatCurrency(receitas);
+  document.getElementById('expenses').textContent = formatCurrency(despesas);
+  document.getElementById('balance').textContent = formatCurrency(balance);
 }
 
 // Atualiza a lista de transações no HTML
@@ -35,11 +35,11 @@ function updateTransactionList() {
   const transactionList = document.getElementById('transaction-list');
   transactionList.innerHTML = '';
   
-  transactions.sort((a, b) => new Date(b.data) - new Date(a.data)).forEach(transaction => {
+  transactions.sort((a, b) => new Date(b.data_transacao) - new Date(a.data_transacao)).forEach(transaction => {
     const li = document.createElement('li');
     li.className = `transaction-item ${transaction.tipo}`;
     
-    const date = new Date(transaction.data);
+    const date = new Date(transaction.data_transacao);
     const formattedDate = date.toLocaleDateString('pt-BR');
     
     li.innerHTML = `
@@ -48,8 +48,8 @@ function updateTransactionList() {
         <span class="transaction-date">${formattedDate}</span>
       </div>
       <div class="transaction-details">
-        <span class="transaction-category">${transaction.categoria}</span>
-        <span class="transaction-account">${transaction.conta}</span>
+        <span class="transaction-category">${transaction.categoria_nome || 'Sem categoria'}</span>
+        <span class="transaction-account">${transaction.conta_nome || 'Sem conta'}</span>
         <span class="transaction-value">${formatCurrency(transaction.valor)}</span>
       </div>
       <div class="transaction-actions">
@@ -151,9 +151,20 @@ amountInput.addEventListener('input', (e) => {
 // Formatar valor monetário no input
 document.getElementById('value').addEventListener('input', function(e) {
   let value = e.target.value.replace(/\D/g, '');
-  if (value.length === 0) value = '0';
+  if (value.length === 0) {
+    e.target.value = '';
+    return;
+  }
+  
+  // Converte para número e divide por 100 para ter os centavos
   value = (parseInt(value) / 100).toFixed(2);
-  e.target.value = value.replace('.', ',');
+  
+  // Formata o número com separador de milhares e vírgula para decimais
+  value = value.replace('.', ',');
+  value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  
+  // Adiciona o prefixo R$
+  e.target.value = `R$ ${value}`;
 });
 
 // Evento de submit do formulário de transações
@@ -163,9 +174,17 @@ document.getElementById('transaction-form').addEventListener('submit', async (e)
   const submitBtn = e.target.querySelector('button[type="submit"]');
   const isEdit = submitBtn.dataset.id;
   
+  // Pega o valor formatado e converte para número
+  const valorFormatado = document.getElementById('value').value;
+  const valorNumerico = parseFloat(valorFormatado
+    .replace('R$ ', '')
+    .replace('.', '')
+    .replace(',', '.')
+  );
+  
   const data = {
     descricao: document.getElementById('description').value.trim(),
-    valor: parseFloat(document.getElementById('value').value.replace(/\./g, '').replace(',', '.')),
+    valor: valorNumerico,
     tipo: document.getElementById('type').value,
     categoria_id: parseInt(document.getElementById('category').value),
     conta_id: parseInt(document.getElementById('account').value)
@@ -232,13 +251,6 @@ async function checkAuth() {
     return false;
   }
 }
-
-// Carregar dados iniciais ao iniciar a página
-document.addEventListener('DOMContentLoaded', async () => {
-  if (await checkAuth()) {
-    loadInitialData();
-  }
-});
 
 // Gerenciamento de Modais
 const modals = {
@@ -395,11 +407,8 @@ document.getElementById('profile-form').addEventListener('submit', async (e) => 
 
 // Carregar dados das configurações
 async function loadSettingsData() {
-  await Promise.all([
-    loadCategories(),
-    loadAccounts(),
-    loadUserData()
-  ]);
+  await loadCategories();
+  await loadAccounts();
 }
 
 // Carregar transações
@@ -409,9 +418,15 @@ async function loadTransactions() {
     if (!response.ok) throw new Error('Erro ao buscar transações');
     
     transactions = await response.json();
-    updateTotals();
+    
+    // Atualiza a lista de transações
     updateTransactionList();
-    initializeChart();
+    
+    // Atualiza os totais
+    updateTotals();
+    
+    // Atualiza o gráfico
+    updateChartData();
   } catch (err) {
     console.error('Erro ao carregar transações:', err.message);
     alert('Erro ao carregar transações');
@@ -600,3 +615,53 @@ function initializeCategoryChart() {
     }
   });
 }
+
+// Inicialização da página
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    // Inicializa o botão de configurações
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsModal = document.getElementById('settings-modal');
+    
+    if (settingsBtn && settingsModal) {
+      settingsBtn.addEventListener('click', () => {
+        settingsModal.style.display = 'block';
+        loadSettingsData();
+      });
+    }
+
+    // Inicializa os botões de fechar modal
+    document.querySelectorAll('.close-modal').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modal = btn.closest('.modal');
+        if (modal) {
+          modal.style.display = 'none';
+        }
+      });
+    });
+
+    // Inicializa as tabs do modal de configurações
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove classe active de todas as tabs
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Adiciona classe active na tab clicada
+        btn.classList.add('active');
+        const tabId = btn.dataset.tab + '-tab';
+        const tabContent = document.getElementById(tabId);
+        if (tabContent) {
+          tabContent.classList.add('active');
+        }
+      });
+    });
+
+    // Carrega dados iniciais
+    await loadCategories();
+    await loadAccounts();
+    await loadTransactions();
+  } catch (err) {
+    console.error('Erro na inicialização:', err);
+  }
+});
