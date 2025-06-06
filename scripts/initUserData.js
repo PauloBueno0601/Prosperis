@@ -27,7 +27,8 @@ async function initUserData(userId) {
     const contas = [
       { nome: 'Conta corrente', saldo: 0 },
       { nome: 'Conta poupança', saldo: 0 },
-      { nome: 'Cartão de crédito', saldo: 0 }
+      { nome: 'Cartão de crédito', saldo: 0 },
+      { nome: 'Conta principal', saldo: 0 }
     ];
 
     for (const conta of contas) {
