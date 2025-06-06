@@ -151,6 +151,7 @@ amountInput.addEventListener('input', (e) => {
 // Formatar valor monetário no input
 document.getElementById('value').addEventListener('input', function(e) {
   let value = e.target.value.replace(/\D/g, '');
+  if (value.length === 0) value = '0';
   value = (parseInt(value) / 100).toFixed(2);
   e.target.value = value.replace('.', ',');
 });
