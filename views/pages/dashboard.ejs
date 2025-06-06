@@ -10,16 +10,38 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <header>
+  <header class="header">
+  <div class="container">
     <div class="header-content">
-      <h1>Prosperis</h1>
-      <p class="user-welcome">Olá, <%= user.nome %></p>
+      <div class="brand-section">
+        <h1 class="brand-title">Prosperis</h1>
+        <p class="user-welcome">Olá, <span class="user-name"><%= user.nome %></span></p>
+      </div>
+      
+      <nav class="nav-section">
+        <button class="settings-btn" onclick="handleSettings()">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 10v6m11-7h-6m-10 0H1m15.5-5.5L19 11l-2.5 2.5M5 11L2.5 8.5 5 6"></path>
+          </svg>
+          <span class="sr-only">Configurações</span>
+        </button>
+        
+        <button class="logout-btn" onclick="handleLogout()">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16,17 21,12 16,7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Sair
+        </button>
+      </nav>
     </div>
-    <nav>
-      <button id="settings-btn">⚙️</button>
-      <a href="/logout" class="logout-btn">Sair</a>
-    </nav>
-  </header>
+  </div>
+  
+  <div class="gradient-line"></div>
+</header>
+
 
   <main class="container">
     <section class="cards">
