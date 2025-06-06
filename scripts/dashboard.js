@@ -214,31 +214,31 @@ document.getElementById('logout-btn').addEventListener('click', async () => {
   }
 });
 
-// Carregar dados do usuário
-async function loadUserData() {
+// Função para verificar se o usuário está autenticado
+async function checkAuth() {
   try {
     const response = await fetch('/usuarios/profile');
-    if (!response.ok) throw new Error('Erro ao buscar dados do usuário');
-    
-    const user = await response.json();
-    document.getElementById('user-name').textContent = user.nome;
-    document.getElementById('profile-name').value = user.nome;
-    document.getElementById('profile-email').value = user.email;
+    if (!response.ok) {
+      if (response.status === 401) {
+        window.location.href = '/login';
+        return false;
+      }
+      throw new Error('Erro ao verificar autenticação');
+    }
+    return true;
   } catch (err) {
-    console.error('Erro ao carregar dados do usuário:', err.message);
-    alert('Erro ao carregar dados do usuário');
+    console.error('Erro:', err.message);
+    window.location.href = '/login';
+    return false;
   }
 }
 
-// Carregar dados iniciais
-async function loadInitialData() {
-  await Promise.all([
-    loadUserData(),
-    loadTransactions(),
-    loadCategories(),
-    loadAccounts()
-  ]);
-}
+// Carregar dados iniciais ao iniciar a página
+document.addEventListener('DOMContentLoaded', async () => {
+  if (await checkAuth()) {
+    loadInitialData();
+  }
+});
 
 // Gerenciamento de Modais
 const modals = {
@@ -435,6 +435,21 @@ async function loadCategories() {
       option.textContent = cat.nome;
       categorySelect.appendChild(option);
     });
+
+    // Atualiza lista de categorias no modal
+    const categoriesList = document.getElementById('categories-list');
+    categoriesList.innerHTML = '';
+    categorias.forEach(cat => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span>${cat.nome}</span>
+        <div class="list-actions">
+          <button class="btn-icon edit" data-id="${cat.id}">✏️</button>
+          <button class="btn-icon delete" data-id="${cat.id}">🗑️</button>
+        </div>
+      `;
+      categoriesList.appendChild(li);
+    });
   } catch (err) {
     console.error('Erro ao carregar categorias:', err.message);
     alert('Erro ao carregar categorias');
@@ -457,6 +472,21 @@ async function loadAccounts() {
       option.value = conta.id;
       option.textContent = conta.nome;
       accountSelect.appendChild(option);
+    });
+
+    // Atualiza lista de contas no modal
+    const accountsList = document.getElementById('accounts-list');
+    accountsList.innerHTML = '';
+    contas.forEach(conta => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span>${conta.nome} - ${formatCurrency(conta.saldo)}</span>
+        <div class="list-actions">
+          <button class="btn-icon edit" data-id="${conta.id}">✏️</button>
+          <button class="btn-icon delete" data-id="${conta.id}">🗑️</button>
+        </div>
+      `;
+      accountsList.appendChild(li);
     });
   } catch (err) {
     console.error('Erro ao carregar contas:', err.message);
@@ -513,9 +543,6 @@ function addTransactionEditDeleteListeners() {
     });
   });
 }
-
-// Carregar dados iniciais ao iniciar a página
-document.addEventListener('DOMContentLoaded', loadInitialData);
 
 // Inicializar gráfico de categorias
 function initializeCategoryChart() {
