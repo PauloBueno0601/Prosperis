@@ -1,26 +1,26 @@
 /* Reset e variáveis globais de estilo */
 :root {
-  --primary: #3498db; /* Cor primária */
-  --primary-dark: #2980b9; /* Variação escura da cor primária */
-  --primary-light: #e3f2fd; /* Variação clara da cor primária */
-  --secondary: #2c3e50; /* Cor secundária */
-  --accent: #f39c12; /* Cor de destaque */
-  --success: #27ae60; /* Cor para sucesso/receitas */
-  --danger: #e74c3c; /* Cor para perigo/despesas */
-  --gray-100: #f8f9fa; /* Tons de cinza */
-  --gray-200: #e9ecef;
-  --gray-300: #dee2e6;
-  --gray-400: #ced4da;
-  --gray-500: #adb5bd;
-  --gray-600: #6c757d;
-  --gray-700: #495057;
-  --gray-800: #343a40;
-  --gray-900: #212529;
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombras */
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-  --radius: 8px; /* Raio da borda padrão */
-  --transition: all 0.3s ease; /* Transição padrão */
+  --primary: #2563eb; /* Azul mais moderno */
+  --primary-dark: #1d4ed8;
+  --primary-light: #eff6ff;
+  --secondary: #1e293b; /* Azul escuro mais moderno */
+  --accent: #f59e0b; /* Laranja mais vibrante */
+  --success: #10b981; /* Verde mais moderno */
+  --danger: #ef4444; /* Vermelho mais moderno */
+  --gray-100: #f8fafc;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius: 0.5rem;
+  --transition: all 0.2s ease;
 }
 
 /* Reset básico para todos os elementos */
@@ -99,23 +99,27 @@ body {
 
 /* Cards de Resumo (Saldo, Receitas, Despesas) */
 .cards {
-  display: flex; /* Organiza os cards em linha */
-  gap: 1.5rem; /* Espaço entre os cards */
-  margin-bottom: 2rem; /* Margem inferior */
-  flex-wrap: wrap; /* Permite que os cards quebrem para a próxima linha em telas menores */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .card {
-  background: white; /* Fundo branco para os cards */
-  flex: 1 1 250px; /* Distribuição flexível, base de 250px, cresce e encolhe */
-  padding: 1.75rem;
+  background: white;
+  padding: 2rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  text-align: center; /* Centraliza o texto */
+  text-align: center;
   transition: var(--transition);
-  border: 1px solid var(--gray-200); /* Borda sutil */
-  position: relative; /* Para o pseudo-elemento ::before */
-  overflow: hidden; /* Garante que o ::before não saia do card */
+  border: 1px solid var(--gray-200);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 180px;
 }
 
 /* Linha colorida no topo dos cards */
@@ -169,16 +173,18 @@ body {
 /* Grid Principal (Formulário e Lista de Transações) */
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr; /* Duas colunas, a da direita um pouco maior */
-  gap: 1.5rem; /* Espaço entre as colunas */
+  grid-template-columns: minmax(300px, 1fr) 1.2fr;
+  gap: 2rem;
+  align-items: start;
 }
 
 .left, .right {
   background: white;
-  padding: 1.75rem;
+  padding: 2rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   border: 1px solid var(--gray-200);
+  height: fit-content;
 }
 
 .right {
@@ -198,10 +204,10 @@ body {
 
 /* Formulário de Transação */
 form#transaction-form {
-  display: flex;
-  flex-direction: column; /* Campos um abaixo do outro */
-  gap: 1rem; /* Espaço entre os campos */
-  margin-bottom: 2rem; /* Margem abaixo do formulário, antes do gráfico */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 form#transaction-form input,
@@ -211,42 +217,28 @@ form#transaction-form select {
   border: 1px solid var(--gray-300);
   font-size: 1rem;
   transition: var(--transition);
-  background-color: var(--gray-100); /* Fundo sutil para os campos */
+  background-color: var(--gray-100);
+  width: 100%;
 }
 
-form#transaction-form input:focus,
-form#transaction-form select:focus {
-  outline: none; /* Remove o outline padrão */
-  border-color: var(--primary); /* Cor da borda ao focar */
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15); /* Sombra de foco sutil */
-  background-color: white; /* Fundo branco ao focar */
-}
-
-form#transaction-form input::placeholder {
-  color: var(--gray-500); /* Cor do placeholder */
+form#transaction-form input[type="text"] {
+  grid-column: 1 / -1;
 }
 
 form#transaction-form button {
+  grid-column: 1 / -1;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
   border: none;
-  padding: 0.875rem 1rem;
+  padding: 1rem;
   border-radius: var(--radius);
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
-  margin-top: 0.5rem; /* Pequena margem acima do botão */
-  box-shadow: 0 2px 4px rgba(41, 128, 185, 0.2);
-}
-
-form#transaction-form button:hover {
-  background: linear-gradient(135deg, var(--primary-dark) 0%, #1a5276 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(41, 128, 185, 0.3);
-}
-
-form#transaction-form button:active {
-  transform: translateY(0);
+  margin-top: 0.5rem;
+  box-shadow: var(--shadow);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Container do Canvas do Gráfico */
@@ -267,82 +259,72 @@ form#transaction-form button:active {
 
 /* Lista de Transações */
 .transaction-list {
-  list-style: none; /* Remove marcadores de lista */
-  overflow-y: auto; /* Adiciona scroll vertical se o conteúdo exceder a altura */
-  flex: 1; /* Permite que a lista ocupe o espaço restante na seção .right */
-  border-top: 1px solid var(--gray-200); /* Linha separadora acima da lista */
-  padding-top: 1rem;
-  margin-top: 0.5rem;
-  scrollbar-width: thin; /* Para Firefox */
-  scrollbar-color: var(--gray-400) var(--gray-200); /* Para Firefox */
-}
-
-/* Scrollbar customizada para Webkit (Chrome, Safari) */
-.transaction-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.transaction-list::-webkit-scrollbar-track {
-  background: var(--gray-200);
-  border-radius: 10px;
-}
-
-.transaction-list::-webkit-scrollbar-thumb {
-  background-color: var(--gray-400);
-  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  max-height: 600px;
+  padding-right: 0.5rem;
 }
 
 #transaction-list li {
+  background: var(--gray-50);
   padding: 1rem;
-  border-bottom: 1px solid var(--gray-200); /* Linha separadora entre itens */
+  border-radius: var(--radius);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1rem;
   transition: var(--transition);
-  border-radius: var(--radius); /* Pequeno arredondamento para hover */
+  border: 1px solid var(--gray-200);
 }
 
 #transaction-list li:hover {
-  background-color: var(--gray-100); /* Fundo ao passar o mouse */
+  transform: translateX(4px);
+  box-shadow: var(--shadow);
 }
 
 #transaction-list li .transaction-details {
   display: flex;
-  flex-direction: column; /* Descrição e categoria uma abaixo da outra */
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 #transaction-list li .description {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--gray-800);
 }
 
 #transaction-list li .category {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: var(--gray-600);
+  background: var(--gray-100);
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  display: inline-block;
 }
 
 #transaction-list li .amount {
-  font-weight: 600;
-  font-size: 1.1rem;
+  font-weight: 700;
+  font-size: 1.125rem;
 }
 
 #transaction-list li.income .amount {
-  color: var(--success); /* Cor para valor de receita na lista */
+  color: var(--success);
 }
 
 #transaction-list li.expense .amount {
-  color: var(--danger); /* Cor para valor de despesa na lista */
+  color: var(--danger);
 }
 
 /* Responsividade */
-@media (max-width: 1024px) { /* Tablets e telas menores */
+@media (max-width: 1024px) {
   .container {
-    padding: 0 1rem; /* Reduz o padding lateral */
+    padding: 1rem;
   }
   
   .grid {
-    gap: 1.25rem; /* Reduz o espaço entre as colunas do grid */
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
@@ -356,26 +338,25 @@ form#transaction-form button:active {
   }
 }
 
-@media (max-width: 640px) { /* Celulares */
+@media (max-width: 640px) {
   .header {
     padding: 1rem;
-    flex-direction: column; /* Header em coluna */
-    gap: 0.75rem;
-    text-align: center; /* Centraliza o texto do header */
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
   }
   
   .cards {
-    flex-direction: column; /* Cards de resumo em coluna */
+    grid-template-columns: 1fr;
+  }
+  
+  form#transaction-form {
+    grid-template-columns: 1fr;
   }
   
   .card {
+    min-height: 150px;
     padding: 1.5rem;
-  }
-  
-  form#transaction-form input,
-  form#transaction-form select,
-  form#transaction-form button {
-    padding: 0.75rem; /* Reduz o padding dos campos do formulário */
   }
 }
 
@@ -386,10 +367,10 @@ form#transaction-form button:active {
 }
 
 .cards .card {
-  animation: fadeIn 0.5s ease forwards; /* Aplica a animação aos cards de resumo */
+  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
 }
 
-/* Delay para cada card aparecer em sequência */
 .cards .card:nth-child(1) { animation-delay: 0.1s; }
 .cards .card:nth-child(2) { animation-delay: 0.2s; }
 .cards .card:nth-child(3) { animation-delay: 0.3s; }
@@ -409,4 +390,404 @@ form#transaction-form button:active {
 
 .mb-2 { /* Exemplo de classe para margem na base */
   margin-bottom: 0.5rem;
+}
+
+/* Header Actions */
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.btn-secondary {
+  background: var(--gray-200);
+  color: var(--gray-800);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.btn-secondary:hover {
+  background: var(--gray-300);
+  transform: translateY(-1px);
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.modal-body {
+  padding: 1rem;
+}
+
+/* Settings Tabs */
+.settings-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #666;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.tab-btn.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Settings List */
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.settings-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.settings-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.item-name {
+  font-weight: 500;
+}
+
+.item-balance {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.item-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Settings Form */
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+  }
+  
+  .settings-tabs {
+    flex-wrap: wrap;
+  }
+  
+  .tab-btn {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* Dashboard Layout */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-content {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-card {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 1rem;
+}
+
+.dashboard-card p {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.dashboard-chart {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.dashboard-transactions {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-transactions h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+/* Transaction Form */
+.transaction-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.transaction-form label {
+  font-weight: 500;
+  color: #666;
+}
+
+.transaction-form input,
+.transaction-form select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.transaction-form button {
+  grid-column: 1 / -1;
+  justify-self: end;
+}
+
+/* Transaction List */
+.transaction-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.transaction-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.transaction-description {
+  font-weight: 500;
+  color: #333;
+}
+
+.transaction-date {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.transaction-details {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.transaction-category,
+.transaction-account {
+  font-size: 0.9rem;
+  color: #666;
+  background-color: #f5f5f5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.transaction-value {
+  font-weight: 500;
+}
+
+.transaction-value.receita {
+  color: #28a745;
+}
+
+.transaction-value.despesa {
+  color: #dc3545;
+}
+
+.transaction-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .transaction-form {
+    grid-template-columns: 1fr;
+  }
+  
+  .transaction-item {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .transaction-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .transaction-actions {
+    align-self: flex-end;
+  }
 }

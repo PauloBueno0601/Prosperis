@@ -11,7 +11,10 @@
 <body>
   <header class="header">
     <h1> Prosperis <span id="user-name"><%= user.nome %></span> - Seu controle financeiro</h1>
-    <button id="logout-btn">Sair</button>
+    <div class="header-actions">
+      <button id="settings-btn" class="btn-secondary">Configurações</button>
+      <button id="logout-btn">Sair</button>
+    </div>
   </header>
 
   <main class="container">
@@ -37,17 +40,23 @@
           <input type="text" id="amount" placeholder="Valor (ex: 1.234,56)" required />
           <select id="category" required>
             <option value="" disabled selected>Selecione uma categoria</option>
-            <option value="Alimentação">Alimentação</option>
-            <option value="Transporte">Transporte</option>
-            <option value="Salário">Salário</option>
-            <option value="Lazer">Lazer</option>
-            <option value="Educação">Educação</option>
-            <option value="Saúde">Saúde</option>
-            <option value="Outros">Outros</option>
+            <option value="1">Alimentação</option>
+            <option value="2">Transporte</option>
+            <option value="3">Salário</option>
+            <option value="4">Lazer</option>
+            <option value="5">Educação</option>
+            <option value="6">Saúde</option>
+            <option value="7">Outros</option>
+          </select>
+          <select id="account" required>
+            <option value="" disabled selected>Selecione uma conta</option>
+            <option value="1">Conta Principal</option>
+            <option value="2">Carteira</option>
+            <option value="3">Poupança</option>
           </select>
           <select id="type">
-            <option value="income">Receita</option>
-            <option value="expense">Despesa</option>
+            <option value="receita">Receita</option>
+            <option value="despesa">Despesa</option>
           </select>
           <button type="submit">Adicionar</button>
         </form>
@@ -63,6 +72,102 @@
       </div>
     </section>
   </main>
+
+  <!-- Modal de Configurações -->
+  <div id="settings-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Configurações</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-tabs">
+          <button class="tab-btn active" data-tab="categorias">Categorias</button>
+          <button class="tab-btn" data-tab="contas">Contas</button>
+          <button class="tab-btn" data-tab="perfil">Perfil</button>
+        </div>
+
+        <!-- Tab Categorias -->
+        <div class="tab-content active" id="categorias-tab">
+          <div class="list-header">
+            <h3>Suas Categorias</h3>
+            <button class="btn-primary" id="add-category-btn">Nova Categoria</button>
+          </div>
+          <ul id="categories-list" class="settings-list"></ul>
+        </div>
+
+        <!-- Tab Contas -->
+        <div class="tab-content" id="contas-tab">
+          <div class="list-header">
+            <h3>Suas Contas</h3>
+            <button class="btn-primary" id="add-account-btn">Nova Conta</button>
+          </div>
+          <ul id="accounts-list" class="settings-list"></ul>
+        </div>
+
+        <!-- Tab Perfil -->
+        <div class="tab-content" id="perfil-tab">
+          <form id="profile-form" class="settings-form">
+            <div class="form-group">
+              <label for="profile-name">Nome</label>
+              <input type="text" id="profile-name" value="<%= user.nome %>" required>
+            </div>
+            <div class="form-group">
+              <label for="profile-email">Email</label>
+              <input type="email" id="profile-email" value="<%= user.email %>" required>
+            </div>
+            <div class="form-group">
+              <label for="profile-password">Nova Senha (opcional)</label>
+              <input type="password" id="profile-password">
+            </div>
+            <button type="submit" class="btn-primary">Salvar Alterações</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Nova Categoria -->
+  <div id="category-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Nova Categoria</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="category-form">
+          <div class="form-group">
+            <label for="category-name">Nome da Categoria</label>
+            <input type="text" id="category-name" required>
+          </div>
+          <button type="submit" class="btn-primary">Salvar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Nova Conta -->
+  <div id="account-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Nova Conta</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="account-form">
+          <div class="form-group">
+            <label for="account-name">Nome da Conta</label>
+            <input type="text" id="account-name" required>
+          </div>
+          <div class="form-group">
+            <label for="account-balance">Saldo Inicial</label>
+            <input type="text" id="account-balance" required>
+          </div>
+          <button type="submit" class="btn-primary">Salvar</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- Carrega as dependências primeiro -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
