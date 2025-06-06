@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const UserModel = require('../models/usuarioModel');
-const initUserData = require('../scripts/initUserData');
+const initUserData = require('../scripts/initUserData');  // Importa o script de inicialização
 
 // Registro de usuário - retorna JSON
 exports.registerUser = async (req, res) => {
@@ -34,18 +34,27 @@ exports.loginUser = async (req, res) => {
   const { email, senha } = req.body;
 
   if (!email || !senha) {
-    return res.status(400).json({ error: 'Email e senha são obrigatórios.' });
+    return res.status(400).json({ message: 'Email e senha são obrigatórios.' });
   }
 
   try {
-    const user = await UserModel.findByEmail(email);
+    const user = await UserModel.getUserByEmail(email);
     if (!user) {
-      return res.status(404).json({ error: 'Usuário não encontrado.' });
+      return res.status(401).json({ message: 'Email ou senha inválidos.' });
     }
 
-    const isValidPassword = await bcrypt.compare(senha, user.senha);
-    if (!isValidPassword) {
-      return res.status(401).json({ error: 'Senha inválida.' });
+    const validPassword = await bcrypt.compare(senha, user.senha);
+    if (!validPassword) {
+      return res.status(401).json({ message: 'Email ou senha inválidos.' });
+    }
+
+    // Verifica se o usuário já tem categorias e contas
+    const hasCategories = await UserModel.hasCategories(user.id);
+    const hasAccounts = await UserModel.hasAccounts(user.id);
+
+    // Se não tiver categorias ou contas, inicializa os dados padrão
+    if (!hasCategories || !hasAccounts) {
+      await initUserData(user.id);
     }
 
     req.session.user = {
@@ -54,9 +63,9 @@ exports.loginUser = async (req, res) => {
       email: user.email
     };
 
-    return res.status(200).json({ message: 'Login realizado com sucesso.', user: { id: user.id, nome: user.nome, email: user.email } });
+    res.status(200).json({ message: 'Login realizado com sucesso.' });
   } catch (err) {
-    return res.status(500).json({ error: 'Erro no servidor.' });
+    res.status(500).json({ error: err.message });
   }
 };
 

@@ -7,14 +7,18 @@
   <link rel="stylesheet" href="/css/dashboard.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
   <link href="https://api.fontshare.com/v2/css?f[]=gopher@400,500,600,700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <header class="header">
-    <h1> Prosperis <span id="user-name"><%= user.nome %></span> - Seu controle financeiro</h1>
-    <div class="header-actions">
-      <button id="settings-btn" class="btn-secondary">Configurações</button>
-      <button id="logout-btn">Sair</button>
+  <header>
+    <div class="header-content">
+      <h1>Prosperis</h1>
+      <p class="user-welcome">Olá, <%= user.nome %></p>
     </div>
+    <nav>
+      <button id="settings-btn">⚙️</button>
+      <a href="/logout" class="logout-btn">Sair</a>
+    </nav>
   </header>
 
   <main class="container">
@@ -40,20 +44,9 @@
           <input type="text" id="value" placeholder="Valor (ex: 1.234,56)" required />
           <select id="category" required>
             <option value="" disabled selected>Selecione uma categoria</option>
-            <option value="1">Saúde</option>
-            <option value="2">Alimentação</option>
-            <option value="3">Transporte</option>
-            <option value="4">Lazer</option>
-            <option value="5">Educação</option>
-            <option value="6">Moradia</option>
-            <option value="7">Outros</option>
           </select>
           <select id="account" required>
             <option value="" disabled selected>Selecione uma conta</option>
-            <option value="1">Conta corrente</option>
-            <option value="2">Conta poupança</option>
-            <option value="3">Cartão de crédito</option>
-            <option value="4">Conta principal</option>
           </select>
           <select id="type">
             <option value="receita">Receita</option>
@@ -170,9 +163,6 @@
     </div>
   </div>
 
-  <!-- Carrega as dependências primeiro -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
   <!-- Carrega o script principal -->
   <script src="/js/dashboard.js"></script>
 

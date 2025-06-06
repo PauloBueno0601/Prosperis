@@ -80,24 +80,24 @@ router.put('/users/:id', authenticateSession, updateUser);
 router.delete('/users/:id', authenticateSession, deleteUser);
 
 // Categorias
-router.post('/categorias', authenticateSession, createCategory);
-router.get('/categorias', authenticateSession, getAllCategories);
-router.get('/categorias/:id', authenticateSession, getCategoryById);
-router.put('/categorias/:id', authenticateSession, updateCategory);
-router.delete('/categorias/:id', authenticateSession, deleteCategory);
+router.post('/api/categorias', authenticateSession, createCategory);
+router.get('/api/categorias', authenticateSession, getAllCategories);
+router.get('/api/categorias/:id', authenticateSession, getCategoryById);
+router.put('/api/categorias/:id', authenticateSession, updateCategory);
+router.delete('/api/categorias/:id', authenticateSession, deleteCategory);
 
 // Contas
-router.post('/contas', authenticateSession, createAccount);
-router.get('/contas', authenticateSession, getAllAccounts);
-router.get('/contas/:id', authenticateSession, getAccountById);
-router.put('/contas/:id', authenticateSession, updateAccount);
-router.delete('/contas/:id', authenticateSession, deleteAccount);
+router.post('/api/contas', authenticateSession, createAccount);
+router.get('/api/contas', authenticateSession, getAllAccounts);
+router.get('/api/contas/:id', authenticateSession, getAccountById);
+router.put('/api/contas/:id', authenticateSession, updateAccount);
+router.delete('/api/contas/:id', authenticateSession, deleteAccount);
 
 // Transações
-router.post('/transacoes', authenticateSession, createTransaction);
-router.get('/transacoes', authenticateSession, getAllTransactions);
-router.get('/transacoes/:id', authenticateSession, getTransactionById);
-router.put('/transacoes/:id', authenticateSession, updateTransaction);
-router.delete('/transacoes/:id', authenticateSession, deleteTransaction);
+router.post('/api/transacoes', authenticateSession, createTransaction);
+router.get('/api/transacoes', authenticateSession, getAllTransactions);
+router.get('/api/transacoes/:id', authenticateSession, getTransactionById);
+router.put('/api/transacoes/:id', authenticateSession, updateTransaction);
+router.delete('/api/transacoes/:id', authenticateSession, deleteTransaction);
 
 module.exports = router;

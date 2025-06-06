@@ -1,4 +1,5 @@
 const db = require('../config/database');
+const bcrypt = require('bcrypt');
 
 class User {
   static async getAll() {
@@ -12,9 +13,10 @@ class User {
   }
 
   static async create(data) {
+    const hashedPassword = await bcrypt.hash(data.senha, 10);
     const result = await db.query(
       'INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3) RETURNING *',
-      [data.nome, data.email, data.senha]
+      [data.nome, data.email, hashedPassword]
     );
     return result.rows[0];
   }
@@ -43,6 +45,21 @@ class User {
   static async findByEmail(email) {
     const result = await db.query('SELECT * FROM usuarios WHERE email = $1', [email]);
     return result.rows[0];
+  }
+
+  static async getUserByEmail(email) {
+    const result = await db.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+    return result.rows[0];
+  }
+
+  static async hasCategories(userId) {
+    const result = await db.query('SELECT COUNT(*) FROM categorias WHERE usuario_id = $1', [userId]);
+    return parseInt(result.rows[0].count) > 0;
+  }
+
+  static async hasAccounts(userId) {
+    const result = await db.query('SELECT COUNT(*) FROM contas WHERE usuario_id = $1', [userId]);
+    return parseInt(result.rows[0].count) > 0;
   }
 }
 

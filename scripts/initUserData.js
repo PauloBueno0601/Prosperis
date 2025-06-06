@@ -1,29 +1,25 @@
 const pool = require('../config/database');
+const categoriaModel = require('../models/categoriaModel');
+const contaModel = require('../models/contaModel');
 
 async function initUserData(userId) {
   const client = await pool.connect();
+  
   try {
     await client.query('BEGIN');
 
-    // Inserir categorias padrão
+    // Categorias padrão
     const categorias = [
-      { nome: 'Saúde' },
-      { nome: 'Alimentação' },
-      { nome: 'Transporte' },
-      { nome: 'Lazer' },
-      { nome: 'Educação' },
-      { nome: 'Moradia' },
-      { nome: 'Outros' }
+      'Saúde',
+      'Alimentação',
+      'Transporte',
+      'Lazer',
+      'Educação',
+      'Moradia',
+      'Outros'
     ];
 
-    for (const categoria of categorias) {
-      await client.query(
-        'INSERT INTO categorias (nome, usuario_id) VALUES ($1, $2)',
-        [categoria.nome, userId]
-      );
-    }
-
-    // Inserir contas padrão
+    // Contas padrão
     const contas = [
       { nome: 'Conta corrente', saldo: 0 },
       { nome: 'Conta poupança', saldo: 0 },
@@ -31,17 +27,34 @@ async function initUserData(userId) {
       { nome: 'Conta principal', saldo: 0 }
     ];
 
+    // Busca categorias existentes
+    const categoriasExistentes = await categoriaModel.getAllCategories(userId);
+    const nomesExistentes = categoriasExistentes.map(cat => cat.nome.toLowerCase());
+
+    // Insere apenas categorias que não existem
+    for (const nome of categorias) {
+      if (!nomesExistentes.includes(nome.toLowerCase())) {
+        await categoriaModel.createCategory(nome, userId);
+      }
+    }
+
+    // Busca contas existentes
+    const contasExistentes = await contaModel.getAllAccounts(userId);
+    const nomesContasExistentes = contasExistentes.map(conta => conta.nome.toLowerCase());
+
+    // Insere apenas contas que não existem
     for (const conta of contas) {
-      await client.query(
-        'INSERT INTO contas (nome, saldo, usuario_id) VALUES ($1, $2, $3)',
-        [conta.nome, conta.saldo, userId]
-      );
+      if (!nomesContasExistentes.includes(conta.nome.toLowerCase())) {
+        await contaModel.createAccount(conta.nome, conta.saldo, userId);
+      }
     }
 
     await client.query('COMMIT');
-  } catch (err) {
+    console.log('Dados padrão criados com sucesso!');
+  } catch (error) {
     await client.query('ROLLBACK');
-    throw err;
+    console.error('Erro ao criar dados padrão:', error);
+    throw error;
   } finally {
     client.release();
   }

@@ -1,4 +1,6 @@
 const TransactionModel = require('../models/transacaoModel');
+const accountModel = require('../models/contaModel');
+const categoriaModel = require('../models/categoriaModel');
 
 exports.createTransaction = async (req, res) => {
   const { descricao, valor, tipo, categoria_id, conta_id, data } = req.body;
@@ -12,13 +14,28 @@ exports.createTransaction = async (req, res) => {
   }
 
   try {
-    if (!(await TransactionModel.checkCategoria(categoria_id, usuario_id))) {
+    // Verifica se a categoria existe e pertence ao usuário
+    const categoria = await categoriaModel.getCategoryById(categoria_id, usuario_id);
+    if (!categoria) {
+      console.log('Categoria não encontrada:', { categoria_id, usuario_id });
       return res.status(404).json({ message: 'Categoria não encontrada ou inacessível.' });
     }
-    if (!(await TransactionModel.checkConta(conta_id, usuario_id))) {
+
+    // Verifica se a conta existe e pertence ao usuário
+    const conta = await accountModel.getAccountById(conta_id, usuario_id);
+    if (!conta) {
+      console.log('Conta não encontrada:', { conta_id, usuario_id });
       return res.status(404).json({ message: 'Conta não encontrada ou inacessível.' });
     }
 
+    // Calcula o novo saldo
+    const valorAjustado = tipo.toLowerCase() === 'receita' ? valor : -valor;
+    const novoSaldo = parseFloat(conta.saldo) + valorAjustado;
+
+    // Atualiza o saldo da conta
+    await accountModel.updateAccount(conta_id, usuario_id, { saldo: novoSaldo });
+
+    // Cria a transação
     const nova = await TransactionModel.create({
       descricao,
       valor,
@@ -31,6 +48,7 @@ exports.createTransaction = async (req, res) => {
 
     res.status(201).json(nova);
   } catch (err) {
+    console.error('Erro ao criar transação:', err);
     res.status(500).json({ error: err.message });
   }
 };

@@ -14,14 +14,17 @@ async function getAllCategories(usuario_id) {
 }
 
 async function getCategoryById(id, usuario_id) {
+  console.log('Buscando categoria:', { id, usuario_id });
   const query = 'SELECT * FROM categorias WHERE id = $1 AND usuario_id = $2';
   const result = await pool.query(query, [id, usuario_id]);
+  console.log('Resultado da busca:', result.rows[0]);
   return result.rows[0];
 }
 
 async function updateCategory(id, usuario_id, nome) {
   const query = 'UPDATE categorias SET nome = $1 WHERE id = $2 AND usuario_id = $3 RETURNING *';
-  const result = await pool.query(query, [nome, id, usuario_id]);
+  const values = [nome, id, usuario_id];
+  const result = await pool.query(query, values);
   return result.rows[0];
 }
 
