@@ -13,7 +13,7 @@ pool.connect()
   .catch((err) => console.error('Erro ao conectar ao banco de dados:', err));
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 
 // Configura o motor de visualização EJS
 app.set('view engine', 'ejs');
