@@ -3,7 +3,7 @@ const pool = require('../config/database');
 const TransactionModel = {
   async create({ descricao, valor, tipo, categoria_id, conta_id, usuario_id, data }) {
     const query = `
-      INSERT INTO transacoes (descricao, valor, tipo, categoria_id, conta_id, usuario_id, data_transacao)
+      INSERT INTO transacoes (descricao, valor, tipo, categoria_id, conta_id, usuario_id, data)
       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;
     `;
     const values = [descricao, valor, tipo, categoria_id, conta_id, usuario_id, data || new Date()];
@@ -20,7 +20,7 @@ const TransactionModel = {
       LEFT JOIN categorias c ON t.categoria_id = c.id
       LEFT JOIN contas co ON t.conta_id = co.id
       WHERE t.usuario_id = $1 
-      ORDER BY t.data_transacao DESC
+      ORDER BY t.data DESC
     `;
     const result = await pool.query(query, [usuario_id]);
     return result.rows;

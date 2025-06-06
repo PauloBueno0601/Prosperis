@@ -35,11 +35,11 @@ function updateTransactionList() {
   const transactionList = document.getElementById('transaction-list');
   transactionList.innerHTML = '';
   
-  transactions.sort((a, b) => new Date(b.data_transacao) - new Date(a.data_transacao)).forEach(transaction => {
+  transactions.sort((a, b) => new Date(b.data) - new Date(a.data)).forEach(transaction => {
     const li = document.createElement('li');
     li.className = `transaction-item ${transaction.tipo}`;
     
-    const date = new Date(transaction.data_transacao);
+    const date = new Date(transaction.data);
     const formattedDate = date.toLocaleDateString('pt-BR');
     
     li.innerHTML = `
