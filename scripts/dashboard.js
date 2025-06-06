@@ -1,30 +1,29 @@
 // Variáveis globais
 let transactions = [];
-let balance = 0; // Saldo inicial zerado
+let balance = 0;
 
-// Formatar valor monetário
+// Formatar valor monetário (BRL)
 function formatCurrency(value) {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
-    currency: 'BRL'
-  }).format(value);
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value || 0);
 }
 
 // Atualiza totais de receitas, despesas e saldo na tela
 function updateTotals() {
   let receitas = 0;
   let despesas = 0;
-  
-  transactions.forEach(transaction => {
-    if (transaction.tipo === 'receita') {
-      receitas += parseFloat(transaction.valor);
-    } else {
-      despesas += parseFloat(transaction.valor);
-    }
+
+  transactions.forEach(tx => {
+    if (tx.tipo === 'receita') receitas += parseFloat(tx.valor);
+    else despesas += parseFloat(tx.valor);
   });
-  
+
   balance = receitas - despesas;
-  
+
   document.getElementById('income').textContent = formatCurrency(receitas);
   document.getElementById('expenses').textContent = formatCurrency(despesas);
   document.getElementById('balance').textContent = formatCurrency(balance);
@@ -32,636 +31,170 @@ function updateTotals() {
 
 // Atualiza a lista de transações no HTML
 function updateTransactionList() {
-  const transactionList = document.getElementById('transaction-list');
-  transactionList.innerHTML = '';
-  
-  transactions.sort((a, b) => new Date(b.data) - new Date(a.data)).forEach(transaction => {
-    const li = document.createElement('li');
-    li.className = `transaction-item ${transaction.tipo}`;
-    
-    const date = new Date(transaction.data);
-    const formattedDate = date.toLocaleDateString('pt-BR');
-    
-    li.innerHTML = `
-      <div class="transaction-info">
-        <span class="transaction-description">${transaction.descricao}</span>
-        <span class="transaction-date">${formattedDate}</span>
-      </div>
-      <div class="transaction-details">
-        <span class="transaction-category">${transaction.categoria_nome || 'Sem categoria'}</span>
-        <span class="transaction-account">${transaction.conta_nome || 'Sem conta'}</span>
-        <span class="transaction-value">${formatCurrency(transaction.valor)}</span>
-      </div>
-      <div class="transaction-actions">
-        <button class="btn-icon edit" data-id="${transaction.id}">✏️</button>
-        <button class="btn-icon delete" data-id="${transaction.id}">🗑️</button>
-      </div>
-    `;
-    
-    transactionList.appendChild(li);
-  });
-  
-  // Adicionar eventos aos botões de editar e excluir
+  const list = document.getElementById('transaction-list');
+  list.innerHTML = '';
+
+  transactions
+    .sort((a, b) => new Date(b.data) - new Date(a.data))
+    .forEach(tx => {
+      const li = document.createElement('li');
+      li.className = `transaction-item ${tx.tipo}`;
+
+      const date = new Date(tx.data);
+      const formattedDate = date.toLocaleDateString('pt-BR');
+
+      li.innerHTML = `
+        <div class="transaction-info">
+          <span class="transaction-description">${tx.descricao}</span>
+          <span class="transaction-date">${formattedDate}</span>
+        </div>
+        <div class="transaction-details">
+          <span class="transaction-category">${tx.categoria_nome || 'Sem categoria'}</span>
+          <span class="transaction-account">${tx.conta_nome || 'Sem conta'}</span>
+          <span class="transaction-value">${formatCurrency(tx.valor)}</span>
+        </div>
+        <div class="transaction-actions">
+          <button class="btn-icon edit" data-id="${tx.id}">✏️</button>
+          <button class="btn-icon delete" data-id="${tx.id}">🗑️</button>
+        </div>
+      `;
+
+      list.appendChild(li);
+    });
+
   addTransactionEditDeleteListeners();
 }
 
-// Configura o gráfico financeiro com Chart.js
-const ctx = document.getElementById('financial-chart').getContext('2d');
-let financialChart;
+// Adiciona listeners para editar/deletar nas transações
+function addTransactionEditDeleteListeners() {
+  document.querySelectorAll('.transaction-actions .edit').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const tx = transactions.find(t => t.id == id);
+      if (!tx) return alert('Transação não encontrada');
 
-function initializeChart() {
-  const incomeTotal = transactions
-    .filter(t => t.type === 'income')
-    .reduce((acc, t) => acc + t.amount, 0);
-  const expenseTotal = transactions
-    .filter(t => t.type === 'expense')
-    .reduce((acc, t) => acc + Math.abs(t.amount), 0);
+      // Preenche formulário para edição
+      document.getElementById('description').value = tx.descricao;
+      document.getElementById('value').value = formatCurrency(tx.valor);
+      document.getElementById('type').value = tx.tipo;
+      document.getElementById('category').value = tx.categoria_id || '';
+      document.getElementById('account').value = tx.conta_id || '';
 
-  if (financialChart) {
-    financialChart.destroy();
-  }
+      const submitBtn = document.querySelector('#transaction-form button[type="submit"]');
+      submitBtn.textContent = 'Salvar alterações';
+      submitBtn.dataset.id = id;
+    });
+  });
 
-  financialChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Receitas', 'Despesas'],
-      datasets: [{
-        label: 'Resumo Financeiro',
-        data: [incomeTotal, expenseTotal],
-        backgroundColor: ['rgba(39, 174, 96, 0.7)', 'rgba(231, 76, 60, 0.7)'],
-        borderColor: ['rgba(39, 174, 96, 1)', 'rgba(231, 76, 60, 1)'],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: value => formatCurrency(value)
-          }
-        }
-      },
-      plugins: {
-        legend: { display: true, position: 'top' },
-        tooltip: {
-          callbacks: {
-            label: ctx => {
-              let label = ctx.dataset.label || '';
-              if (label) label += ': ';
-              if (ctx.parsed.y !== null) label += formatCurrency(ctx.parsed.y);
-              return label;
-            }
-          }
-        }
+  document.querySelectorAll('.transaction-actions .delete').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Deseja realmente deletar esta transação?')) return;
+      const id = btn.dataset.id;
+
+      try {
+        const res = await fetch(`/transacoes/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Erro ao deletar transação');
+
+        await loadTransactions();
+      } catch (err) {
+        alert(err.message);
       }
-    }
+    });
   });
 }
 
-// Atualiza dados do gráfico
-function updateChartData() {
-  if (!financialChart) return;
-
-  const incomeTotal = transactions
-    .filter(t => t.type === 'income')
-    .reduce((acc, t) => acc + t.amount, 0);
-  const expenseTotal = transactions
-    .filter(t => t.type === 'expense')
-    .reduce((acc, t) => acc + Math.abs(t.amount), 0);
-
-  financialChart.data.datasets[0].data = [incomeTotal, expenseTotal];
-  financialChart.update();
-}
-
-// Máscara para formatação do campo de valor
-const amountInput = document.getElementById('amount');
-amountInput.addEventListener('input', (e) => {
-  let value = e.target.value;
-  value = value.replace(/\D/g, '');
-  value = (Number(value) / 100).toLocaleString('pt-BR', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-  e.target.value = value;
-});
-
-// Formatar valor monetário no input
-document.getElementById('value').addEventListener('input', function(e) {
-  let value = e.target.value.replace(/\D/g, '');
-  if (value.length === 0) {
-    e.target.value = '';
-    return;
-  }
-  
-  // Converte para número e divide por 100 para ter os centavos
-  value = (parseInt(value) / 100).toFixed(2);
-  
-  // Formata o número com separador de milhares e vírgula para decimais
-  value = value.replace('.', ',');
-  value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  
-  // Adiciona o prefixo R$
-  e.target.value = `R$ ${value}`;
-});
-
-// Evento de submit do formulário de transações
-document.getElementById('transaction-form').addEventListener('submit', async (e) => {
+// Evento submit do formulário
+document.getElementById('transaction-form').addEventListener('submit', async e => {
   e.preventDefault();
-  
+
   const submitBtn = e.target.querySelector('button[type="submit"]');
   const isEdit = submitBtn.dataset.id;
-  
-  // Pega o valor formatado e converte para número
-  const valorFormatado = document.getElementById('value').value;
-  const valorNumerico = parseFloat(valorFormatado
-    .replace('R$ ', '')
-    .replace('.', '')
-    .replace(',', '.')
-  );
-  
-  const data = {
-    descricao: document.getElementById('description').value.trim(),
-    valor: valorNumerico,
-    tipo: document.getElementById('type').value,
-    categoria_id: parseInt(document.getElementById('category').value),
-    conta_id: parseInt(document.getElementById('account').value)
-  };
-  
-  if (isNaN(data.valor)) {
-    alert('Por favor, insira um valor válido');
+
+  const description = document.getElementById('description').value.trim();
+  const rawValue = document.getElementById('value').value.trim();
+  const type = document.getElementById('type').value;
+  const categoryId = document.getElementById('category').value;
+  const accountId = document.getElementById('account').value;
+
+  if (!description || !rawValue || !type || !categoryId || !accountId) {
+    alert('Todos os campos são obrigatórios.');
     return;
   }
-  
+
+  // 🔧 Conversão segura do valor (corrige erro de R$ 1.600,00 não ser reconhecido)
+  const valor = parseFloat(
+    rawValue
+      .replace(/\s|[^\d,.-]/g, '') // remove espaços e caracteres não numéricos
+      .replace(/\./g, '')          // remove pontos de milhar
+      .replace(',', '.')           // troca vírgula decimal por ponto
+  );
+
+  if (isNaN(valor)) {
+    alert('Valor inválido. Digite um número no formato correto (ex: 1.234,56).');
+    return;
+  }
+
+  const data = {
+    descricao: description,
+    valor: valor,
+    tipo: type,
+    categoria_id: parseInt(categoryId),
+    conta_id: parseInt(accountId),
+  };
+
   try {
     const response = await fetch(`/transacoes${isEdit ? `/${isEdit}` : ''}`, {
       method: isEdit ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || `Erro ao ${isEdit ? 'atualizar' : 'criar'} transação`);
     }
-    
-    // Limpar formulário
+
     e.target.reset();
-    submitBtn.textContent = 'Adicionar Transação';
+    submitBtn.textContent = 'Adicionar';
     delete submitBtn.dataset.id;
-    
-    // Recarregar dados
-    loadTransactions();
+
+    await loadTransactions();
   } catch (err) {
-    console.error('Erro:', err.message);
     alert(err.message);
   }
 });
 
-// Evento de logout
-document.getElementById('logout-btn').addEventListener('click', async () => {
-  try {
-    const response = await fetch('/auth/logout', { method: 'POST' });
-    if (!response.ok) throw new Error('Erro ao fazer logout');
-    
-    window.location.href = '/login';
-  } catch (err) {
-    console.error('Erro:', err.message);
-    alert('Erro ao fazer logout');
-  }
+// Máscara para valor (formatação BRL) ao perder foco
+document.getElementById('value').addEventListener('blur', () => {
+  const input = document.getElementById('value');
+  const raw = input.value;
+
+  const valor = parseFloat(
+    raw
+      .replace(/\s|[^\d,.-]/g, '')
+      .replace(/\./g, '')
+      .replace(',', '.')
+  );
+
+  input.value = isNaN(valor) ? '' : formatCurrency(valor);
 });
 
-// Função para verificar se o usuário está autenticado
-async function checkAuth() {
-  try {
-    const response = await fetch('/usuarios/profile');
-    if (!response.ok) {
-      if (response.status === 401) {
-        window.location.href = '/login';
-        return false;
-      }
-      throw new Error('Erro ao verificar autenticação');
-    }
-    return true;
-  } catch (err) {
-    console.error('Erro:', err.message);
-    window.location.href = '/login';
-    return false;
-  }
-}
-
-// Gerenciamento de Modais
-const modals = {
-  settings: document.getElementById('settings-modal'),
-  category: document.getElementById('category-modal'),
-  account: document.getElementById('account-modal')
-};
-
-// Função para abrir modal
-function openModal(modal) {
-  modal.style.display = 'block';
-}
-
-// Função para fechar modal
-function closeModal(modal) {
-  modal.style.display = 'none';
-}
-
-// Botões de abrir modal
-document.getElementById('settings-btn').addEventListener('click', () => {
-  openModal(modals.settings);
-  loadSettingsData();
-});
-
-// Botões de fechar modal
-document.querySelectorAll('.close-modal').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const modal = btn.closest('.modal');
-    closeModal(modal);
-  });
-});
-
-// Fechar modal ao clicar fora
-window.addEventListener('click', (e) => {
-  if (e.target.classList.contains('modal')) {
-    closeModal(e.target);
-  }
-});
-
-// Gerenciamento de Tabs
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    // Remove active de todas as tabs
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    
-    // Adiciona active na tab clicada
-    btn.classList.add('active');
-    const tabId = btn.dataset.tab + '-tab';
-    document.getElementById(tabId).classList.add('active');
-  });
-});
-
-// Botões de adicionar nova categoria/conta
-document.getElementById('add-category-btn').addEventListener('click', () => {
-  openModal(modals.category);
-});
-
-document.getElementById('add-account-btn').addEventListener('click', () => {
-  openModal(modals.account);
-});
-
-// Formulário de categoria
-document.getElementById('category-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const nome = document.getElementById('category-name').value.trim();
-  
-  try {
-    const response = await fetch('/categorias', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome })
-    });
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Erro ao criar categoria');
-    }
-    
-    e.target.reset();
-    closeModal(modals.category);
-    loadCategories();
-  } catch (err) {
-    console.error('Erro:', err.message);
-    alert(err.message);
-  }
-});
-
-// Formulário de conta
-document.getElementById('account-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const nome = document.getElementById('account-name').value.trim();
-  const saldo = parseFloat(document.getElementById('account-balance').value.replace(/\./g, '').replace(',', '.'));
-  
-  if (isNaN(saldo)) {
-    alert('Por favor, insira um saldo válido');
-    return;
-  }
-  
-  try {
-    const response = await fetch('/contas', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, saldo })
-    });
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Erro ao criar conta');
-    }
-    
-    e.target.reset();
-    closeModal(modals.account);
-    loadAccounts();
-  } catch (err) {
-    console.error('Erro:', err.message);
-    alert(err.message);
-  }
-});
-
-// Formulário de perfil
-document.getElementById('profile-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const data = {
-    nome: document.getElementById('profile-name').value.trim(),
-    email: document.getElementById('profile-email').value.trim(),
-    senha: document.getElementById('profile-password').value
-  };
-  
-  if (!data.senha) delete data.senha;
-  
-  try {
-    const response = await fetch('/usuarios/profile', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Erro ao atualizar perfil');
-    }
-    
-    alert('Perfil atualizado com sucesso!');
-    loadUserData();
-  } catch (err) {
-    console.error('Erro:', err.message);
-    alert(err.message);
-  }
-});
-
-// Carregar dados das configurações
-async function loadSettingsData() {
-  await loadCategories();
-  await loadAccounts();
-}
-
-// Carregar transações
+// Carregar transações do backend
 async function loadTransactions() {
   try {
-    const response = await fetch('/transacoes');
-    if (!response.ok) throw new Error('Erro ao buscar transações');
-    
-    transactions = await response.json();
-    
-    // Atualiza a lista de transações
+    const res = await fetch('/transacoes');
+    if (!res.ok) throw new Error('Erro ao buscar transações');
+
+    transactions = await res.json();
+
     updateTransactionList();
-    
-    // Atualiza os totais
     updateTotals();
-    
-    // Atualiza o gráfico
-    updateChartData();
   } catch (err) {
-    console.error('Erro ao carregar transações:', err.message);
-    alert('Erro ao carregar transações');
+    alert(err.message);
   }
-}
-
-// Carregar categorias
-async function loadCategories() {
-  try {
-    const response = await fetch('/categorias');
-    if (!response.ok) throw new Error('Erro ao buscar categorias');
-    
-    const categorias = await response.json();
-    
-    // Atualiza select de categorias
-    const categorySelect = document.getElementById('category');
-    categorySelect.innerHTML = '<option value="" disabled selected>Selecione uma categoria</option>';
-    categorias.forEach(cat => {
-      const option = document.createElement('option');
-      option.value = cat.id;
-      option.textContent = cat.nome;
-      categorySelect.appendChild(option);
-    });
-
-    // Atualiza lista de categorias no modal
-    const categoriesList = document.getElementById('categories-list');
-    categoriesList.innerHTML = '';
-    categorias.forEach(cat => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <span>${cat.nome}</span>
-        <div class="list-actions">
-          <button class="btn-icon edit" data-id="${cat.id}">✏️</button>
-          <button class="btn-icon delete" data-id="${cat.id}">🗑️</button>
-        </div>
-      `;
-      categoriesList.appendChild(li);
-    });
-  } catch (err) {
-    console.error('Erro ao carregar categorias:', err.message);
-    alert('Erro ao carregar categorias');
-  }
-}
-
-// Carregar contas
-async function loadAccounts() {
-  try {
-    const response = await fetch('/contas');
-    if (!response.ok) throw new Error('Erro ao buscar contas');
-    
-    const contas = await response.json();
-    
-    // Atualiza select de contas
-    const accountSelect = document.getElementById('account');
-    accountSelect.innerHTML = '<option value="" disabled selected>Selecione uma conta</option>';
-    contas.forEach(conta => {
-      const option = document.createElement('option');
-      option.value = conta.id;
-      option.textContent = conta.nome;
-      accountSelect.appendChild(option);
-    });
-
-    // Atualiza lista de contas no modal
-    const accountsList = document.getElementById('accounts-list');
-    accountsList.innerHTML = '';
-    contas.forEach(conta => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <span>${conta.nome} - ${formatCurrency(conta.saldo)}</span>
-        <div class="list-actions">
-          <button class="btn-icon edit" data-id="${conta.id}">✏️</button>
-          <button class="btn-icon delete" data-id="${conta.id}">🗑️</button>
-        </div>
-      `;
-      accountsList.appendChild(li);
-    });
-  } catch (err) {
-    console.error('Erro ao carregar contas:', err.message);
-    alert('Erro ao carregar contas');
-  }
-}
-
-// Adicionar eventos aos botões de editar e excluir transações
-function addTransactionEditDeleteListeners() {
-  // Editar transação
-  document.querySelectorAll('.transaction-item .btn-icon.edit').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const id = btn.dataset.id;
-      try {
-        const response = await fetch(`/transacoes/${id}`);
-        if (!response.ok) throw new Error('Erro ao buscar transação');
-        
-        const transaction = await response.json();
-        
-        // Preencher formulário com dados da transação
-        document.getElementById('description').value = transaction.descricao;
-        document.getElementById('value').value = transaction.valor;
-        document.getElementById('date').value = transaction.data.split('T')[0];
-        document.getElementById('type').value = transaction.tipo;
-        document.getElementById('category').value = transaction.categoria_id;
-        document.getElementById('account').value = transaction.conta_id;
-        
-        // Atualizar botão de submit
-        const submitBtn = document.querySelector('#transaction-form button[type="submit"]');
-        submitBtn.textContent = 'Atualizar Transação';
-        submitBtn.dataset.id = id;
-      } catch (err) {
-        console.error('Erro:', err.message);
-        alert('Erro ao carregar transação');
-      }
-    });
-  });
-
-  // Excluir transação
-  document.querySelectorAll('.transaction-item .btn-icon.delete').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      if (!confirm('Tem certeza que deseja excluir esta transação?')) return;
-      
-      const id = btn.dataset.id;
-      try {
-        const response = await fetch(`/transacoes/${id}`, { method: 'DELETE' });
-        if (!response.ok) throw new Error('Erro ao excluir transação');
-        
-        loadTransactions();
-      } catch (err) {
-        console.error('Erro:', err.message);
-        alert('Erro ao excluir transação');
-      }
-    });
-  });
-}
-
-// Inicializar gráfico de categorias
-function initializeCategoryChart() {
-  const ctx = document.getElementById('chart').getContext('2d');
-  
-  // Agrupar transações por categoria
-  const categoryData = {};
-  transactions.forEach(transaction => {
-    if (transaction.tipo === 'despesa') {
-      if (!categoryData[transaction.categoria]) {
-        categoryData[transaction.categoria] = 0;
-      }
-      categoryData[transaction.categoria] += parseFloat(transaction.valor);
-    }
-  });
-  
-  // Criar dados para o gráfico
-  const labels = Object.keys(categoryData);
-  const data = Object.values(categoryData);
-  
-  // Criar cores aleatórias para cada categoria
-  const colors = labels.map(() => {
-    const r = Math.floor(Math.random() * 255);
-    const g = Math.floor(Math.random() * 255);
-    const b = Math.floor(Math.random() * 255);
-    return `rgba(${r}, ${g}, ${b}, 0.8)`;
-  });
-  
-  // Destruir gráfico anterior se existir
-  if (window.chart) {
-    window.chart.destroy();
-  }
-  
-  // Criar novo gráfico
-  window.chart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: labels,
-      datasets: [{
-        data: data,
-        backgroundColor: colors
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'right'
-        },
-        title: {
-          display: true,
-          text: 'Despesas por Categoria'
-        }
-      }
-    }
-  });
 }
 
 // Inicialização da página
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    // Inicializa o botão de configurações
-    const settingsBtn = document.getElementById('settings-btn');
-    const settingsModal = document.getElementById('settings-modal');
-    
-    if (settingsBtn && settingsModal) {
-      settingsBtn.addEventListener('click', () => {
-        settingsModal.style.display = 'block';
-        loadSettingsData();
-      });
-    }
-
-    // Inicializa os botões de fechar modal
-    document.querySelectorAll('.close-modal').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const modal = btn.closest('.modal');
-        if (modal) {
-          modal.style.display = 'none';
-        }
-      });
-    });
-
-    // Inicializa as tabs do modal de configurações
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Remove classe active de todas as tabs
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
-        // Adiciona classe active na tab clicada
-        btn.classList.add('active');
-        const tabId = btn.dataset.tab + '-tab';
-        const tabContent = document.getElementById(tabId);
-        if (tabContent) {
-          tabContent.classList.add('active');
-        }
-      });
-    });
-
-    // Carrega dados iniciais
-    await loadCategories();
-    await loadAccounts();
-    await loadTransactions();
-  } catch (err) {
-    console.error('Erro na inicialização:', err);
-  }
+document.addEventListener('DOMContentLoaded', () => {
+  loadTransactions();
 });

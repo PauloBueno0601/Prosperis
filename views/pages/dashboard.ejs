@@ -40,9 +40,20 @@
           <input type="text" id="value" placeholder="Valor (ex: 1.234,56)" required />
           <select id="category" required>
             <option value="" disabled selected>Selecione uma categoria</option>
+            <option value="Saúde">Receita</option>
+            <option value="Alimentação">Despesa</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Lazer">Lazer</option>
+            <option value="Educação">Educação</option>
+            <option value="Moradia">Moradia</option>
+            <option value="Outros">Outros</option>
+               
           </select>
           <select id="account" required>
             <option value="" disabled selected>Selecione uma conta</option>
+            <option value="Conta principal">Conta corrente</option>
+            <option value=" Conta corrente">Conta principal</option>
+            <option value="Cartão de crédito">Cartão de crédito</option>
           </select>
           <select id="type">
             <option value="receita">Receita</option>
@@ -163,7 +174,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <!-- Carrega o script principal -->
-  <script src="/scripts/dashboard.js"></script>
+  <script src="/js/dashboard.js"></script>
 
   <script>
     document.getElementById('logout-btn').addEventListener('click', async () => {
