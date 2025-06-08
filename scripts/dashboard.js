@@ -178,7 +178,7 @@ async function loadTransactions() {
 // Carregar categorias do backend
 async function loadCategories() {
   try {
-    const response = await fetch('/api/categorias');
+    const response = await fetch('/api/categor"ias');
     if (!response.ok) throw new Error('Erro ao carregar categorias');
     
     const categorias = await response.json();
