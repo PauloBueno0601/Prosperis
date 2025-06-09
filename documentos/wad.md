@@ -222,12 +222,82 @@ O Diagrama MVC é uma representação visual da arquitetura Model-View-Controlle
 
 *Utilize um link para outra página de documentação contendo a descrição completa de cada endpoint. Ou descreva aqui cada endpoint criado para seu sistema.*  
 
-### 3.7 Interface e Navegação (Semana 07)
+### 3.7 Interface e Navegação 
 
-*Descreva e ilustre aqui o desenvolvimento do frontend do sistema web, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar.*
+A interface do Prosperis foi desenvolvida com foco em simplicidade e acessibilidade. A aplicação conta com telas intuitivas de login e cadastro, além de uma dashboard completa, onde o usuário pode visualizar seu saldo atualizado em tempo real e gerenciar suas transações financeiras, que já estão integradas ao banco de dados. Cada transação exibe detalhes relevantes, como valor, data, tipo e descrição, oferecendo um controle financeiro prático, funcional e eficaz.O desenvolvimento do frontend foi realizado utilizando HTML, CSS e JavaScript, com integração total com o backend por meio da Fetch API. Todo o sistema foi estruturado seguindo o padrão de arquitetura MVC (Model-View-Controller), garantindo organização, manutenção e escalabilidade do código. O layout foi pensado para ser responsivo, permitindo o uso em diferentes dispositivos e resoluções de tela.
 
----
+<div align="center">
+<figcaption><strong>Figura 2 - Tela de Login</strong></figcaption>
+<br>
+<img src="../assets/wad/telalogin.png" width="100%">
+<br>
+<em>Fonte: Material produzido pelo autor (2025)</em>
+</div>
+ <br>
+&emsp; A tela de login do Prosperis foi projetada para ser rápida, objetiva e visualmente agradável. Ela exibe com destaque a logo da aplicação e um slogan breve que reforça sua proposta de valor. A interface apresenta campos simples e diretos para inserção de e-mail e senha, garantindo uma experiência fluida e eficiente para o usuário já cadastrado.
 
+<div align="center">
+<figcaption><strong>Figura 3 - Tela de cadastro</strong></figcaption>
+<br>
+<img src="../assets/wad/telacadastro.png" width="100%">
+<br>
+<em>Fonte: Material produzido pelo autor (2025)</em>
+</div>
+<br>
+No modo de cadastro mostrado na imagem acima, o formulário apresenta campos básicos e diretos: nome completo, e-mail, senha e confirmação de senha. Cada campo é exibido com estilo limpo, bordas suaves e espaçamento adequado, garantindo boa legibilidade e experiência de uso. Acima do formulário, há o título “Acesse sua conta” seguido de uma breve instrução que convida o usuário a entrar ou criar uma conta para gerenciar suas finanças.
+
+O design geral é minimalista e moderno, com uma paleta de cores suaves em tons de azul e cinza claro, reforçando a sensação de confiança e tranquilidade. A interface foi pensada para oferecer uma navegação fluida, tanto em computadores quanto em dispositivos móveis, tornando o primeiro contato com o sistema agradável e eficiente.
+
+<div align="center">
+<figcaption><strong>Figura 4 - Tela Principal</strong></figcaption>
+<br>
+<img src="../assets/wad/dashboard.png" width="100%">
+<br>
+<em>Fonte: Material produzido pelo autor (2025)</em>
+</div>
+
+A tela exibida corresponde à dashboard principal da aplicação Prosperis, onde o usuário pode visualizar e gerenciar suas finanças de forma centralizada. No topo da página, à esquerda, aparece o logotipo da aplicação seguido de uma saudação personalizada com o nome do usuário logado, promovendo uma experiência mais acolhedora. À direita, há um botão vermelho de “Sair”, que permite ao usuário encerrar a sessão de forma rápida.
+
+Logo abaixo, três cards principais resumem as informações financeiras mais relevantes: o saldo atual calculado automaticamente com base nas entradas e saídas; o total de receitas, apresentado em verde para indicar valores positivos; e o total de despesas, exibido em vermelho para destacar os gastos.
+
+A parte inferior da tela está dividida em dois painéis. No lado esquerdo, encontra-se o formulário de registro de transações, onde o usuário pode adicionar novas movimentações financeiras informando a descrição, o valor, a categoria, a conta e o tipo (receita ou despesa). Após preencher os dados, basta clicar no botão azul “Adicionar” para registrar a transação no sistema. Logo abaixo, há um gráfico de barras que compara visualmente os valores totais de receitas e despesas, ajudando o usuário a compreender rapidamente o seu equilíbrio financeiro.
+
+No lado direito da tela, está o painel com o histórico de transações. Nele, cada movimentação é listada com sua descrição, data, categoria, conta associada e valor. Ao lado de cada item, há ícones para editar ou excluir a transação, garantindo que o usuário possa manter seus dados sempre atualizados.
+
+Em resumo, essa tela proporciona uma visão clara e objetiva da vida financeira do usuário, com recursos funcionais e intuitivos que facilitam o controle e a tomada de decisões de maneira rápida para um melhor controle financeiro.
+ #### 1. Tecnologias Utilizadas
+- Template Engine: EJS (Embedded JavaScript)
+- Estilização: CSS puro
+- Backend: Node.js com Express
+- Banco de Dados: PostgreSQL com Supabase
+#### 2. Estrutura do Frontend
+- O frontend do sistema está organizado da seguinte forma:
+- /views/
+- /pages/ - Páginas principais do sistema
+- /components/ - Componentes reutilizáveis
+- /layout/ - Layouts base
+- /css/ - Arquivos de estilo
+#### 3. Principais Funcionalidades Implementadas
+-  Sistema de Autenticação
+- Página de login com formulário de autenticação
+- Sistema de sessão para controle de acesso
+- Proteção de rotas para usuários não autenticados
+-  Dashboard
+- Interface principal do sistema após login
+- Visualização de dados e métricas importantes
+- Navegação entre diferentes seções do sistema
+
+#### 4. Responsividade
+- O sistema foi desenvolvido com foco em responsividade, adaptando-se a diferentes tamanhos de tela:
+Desktop
+Tablet
+Mobile
+#### 5. Segurança
+- Implementações de segurança no frontend:
+- Validação de formulários
+- Proteção contra XSS
+- Sanitização de inputs
+- Gerenciamento de sessão
 ## <a name="c4"></a>4. Desenvolvimento da Aplicação Web (Semana 8)
 
 ### 4.1 Demonstração do Sistema Web (Semana 8)
