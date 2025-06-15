@@ -178,7 +178,7 @@ async function loadTransactions() {
 // Carregar categorias do backend
 async function loadCategories() {
   try {
-    const response = await fetch('/api/categor"ias');
+    const response = await fetch('/api/categorias');
     if (!response.ok) throw new Error('Erro ao carregar categorias');
     
     const categorias = await response.json();
@@ -332,19 +332,15 @@ async function handleTransactionSubmit(e) {
 }
 
 // Inicialização
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Adiciona o event listener para o formulário de transações
   const transactionForm = document.getElementById('transaction-form');
   if (transactionForm) {
-    // Remove event listeners existentes
-    const newForm = transactionForm.cloneNode(true);
-    transactionForm.parentNode.replaceChild(newForm, transactionForm);
-    
-    // Adiciona o novo event listener
-    newForm.addEventListener('submit', handleTransactionSubmit);
+    transactionForm.addEventListener('submit', handleTransactionSubmit);
   }
 
   // Carrega os dados iniciais
-  loadTransactions();
-  updateAccountsList();
-  loadCategories();
+  await loadCategories();
+  await updateAccountsList();
+  await loadTransactions();
 });

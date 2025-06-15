@@ -19,15 +19,7 @@
       </div>
       
       <nav class="nav-section">
-        <button class="settings-btn" onclick="handleSettings()">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M12 1v6m0 10v6m11-7h-6m-10 0H1m15.5-5.5L19 11l-2.5 2.5M5 11L2.5 8.5 5 6"></path>
-          </svg>
-          <span class="sr-only">Configurações</span>
-        </button>
-        
-        <button class="logout-btn" onclick="handleLogout()">
+        <button class="logout-btn" onclick="window.location.href='/login'">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
             <polyline points="16,17 21,12 16,7"></polyline>
@@ -88,102 +80,6 @@
       </div>
     </section>
   </main>
-
-  <!-- Modal de Configurações -->
-  <div id="settings-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Configurações</h2>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="settings-tabs">
-          <button class="tab-btn active" data-tab="categorias">Categorias</button>
-          <button class="tab-btn" data-tab="contas">Contas</button>
-          <button class="tab-btn" data-tab="perfil">Perfil</button>
-        </div>
-
-        <!-- Tab Categorias -->
-        <div class="tab-content active" id="categorias-tab">
-          <div class="list-header">
-            <h3>Suas Categorias</h3>
-            <button class="btn-primary" id="add-category-btn">Nova Categoria</button>
-          </div>
-          <ul id="categories-list" class="settings-list"></ul>
-        </div>
-
-        <!-- Tab Contas -->
-        <div class="tab-content" id="contas-tab">
-          <div class="list-header">
-            <h3>Suas Contas</h3>
-            <button class="btn-primary" id="add-account-btn">Nova Conta</button>
-          </div>
-          <ul id="accounts-list" class="settings-list"></ul>
-        </div>
-
-        <!-- Tab Perfil -->
-        <div class="tab-content" id="perfil-tab">
-          <form id="profile-form" class="settings-form">
-            <div class="form-group">
-              <label for="profile-name">Nome</label>
-              <input type="text" id="profile-name" value="<%= user.nome %>" required>
-            </div>
-            <div class="form-group">
-              <label for="profile-email">Email</label>
-              <input type="email" id="profile-email" value="<%= user.email %>" required>
-            </div>
-            <div class="form-group">
-              <label for="profile-password">Nova Senha (opcional)</label>
-              <input type="password" id="profile-password">
-            </div>
-            <button type="submit" class="btn-primary">Salvar Alterações</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Nova Categoria -->
-  <div id="category-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Nova Categoria</h2>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="category-form">
-          <div class="form-group">
-            <label for="category-name">Nome da Categoria</label>
-            <input type="text" id="category-name" required>
-          </div>
-          <button type="submit" class="btn-primary">Salvar</button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Nova Conta -->
-  <div id="account-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Nova Conta</h2>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="account-form">
-          <div class="form-group">
-            <label for="account-name">Nome da Conta</label>
-            <input type="text" id="account-name" required>
-          </div>
-          <div class="form-group">
-            <label for="account-balance">Saldo Inicial</label>
-            <input type="text" id="account-balance" required>
-          </div>
-          <button type="submit" class="btn-primary">Salvar</button>
-        </form>
-      </div>
-    </div>
-  </div>
 
   <!-- Carrega o script principal -->
   <script src="/js/dashboard.js"></script>
