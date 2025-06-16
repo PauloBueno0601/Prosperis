@@ -356,29 +356,47 @@ async function handleTransactionSubmit(e) {
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', async () => {
-  // Adiciona o event listener para o formulário de transações
-  const transactionForm = document.getElementById('transaction-form');
-  if (transactionForm) {
-    transactionForm.addEventListener('submit', handleTransactionSubmit);
-  }
+  try {
+    // Adiciona o event listener para o formulário de transações
+    const transactionForm = document.getElementById('transaction-form');
+    if (transactionForm) {
+      transactionForm.addEventListener('submit', handleTransactionSubmit);
+    }
 
-  // Adiciona o event listener para formatação do campo de valor
-  const valueInput = document.getElementById('value');
-  if (valueInput) {
-    valueInput.addEventListener('input', (e) => {
-      formatCurrencyInput(e.target);
-    });
-    
-    // Formata o valor quando o campo recebe foco
-    valueInput.addEventListener('focus', (e) => {
-      if (!e.target.value) {
-        e.target.value = '0,00';
-      }
-    });
-  }
+    // Adiciona o event listener para formatação do campo de valor
+    const valueInput = document.getElementById('value');
+    if (valueInput) {
+      valueInput.addEventListener('input', (e) => {
+        formatCurrencyInput(e.target);
+      });
+      
+      // Formata o valor quando o campo recebe foco
+      valueInput.addEventListener('focus', (e) => {
+        if (!e.target.value) {
+          e.target.value = '0,00';
+        }
+      });
+    }
 
-  // Carrega os dados iniciais
-  await loadCategories();
-  await updateAccountsList();
-  await loadTransactions();
+    // Adiciona o event listener para o botão de logout
+    const logoutBtn = document.querySelector('.logout-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        try {
+          await fetch('/logout', { method: 'POST' });
+          window.location.href = '/login';
+        } catch (error) {
+          console.error('Erro ao fazer logout:', error);
+          window.location.href = '/login';
+        }
+      });
+    }
+
+    // Carrega os dados iniciais
+    await loadCategories();
+    await updateAccountsList();
+    await loadTransactions();
+  } catch (error) {
+    console.error('Erro na inicialização:', error);
+  }
 });

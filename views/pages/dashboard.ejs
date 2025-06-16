@@ -83,12 +83,5 @@
 
   <!-- Carrega o script principal -->
   <script src="/js/dashboard.js"></script>
-
-  <script>
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      await fetch('/logout', { method: 'POST' });
-      window.location.href = '/login';
-    });
-  </script>
 </body>
 </html>
