@@ -10,6 +10,34 @@ function formatCurrency(value) {
   }).format(value || 0);
 }
 
+// Função para formatar input de valor em reais
+function formatCurrencyInput(input) {
+  // Remove tudo que não é número
+  let value = input.value.replace(/\D/g, '');
+  
+  // Converte para número e divide por 100 para considerar os centavos
+  value = (parseInt(value) / 100).toFixed(2);
+  
+  // Formata o número como moeda
+  const formattedValue = new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
+  
+  // Atualiza o valor do input
+  input.value = formattedValue;
+}
+
+// Função para converter valor formatado em número
+function parseCurrencyValue(formattedValue) {
+  return parseFloat(
+    formattedValue
+      .replace(/\s|[^\d,.-]/g, '')
+      .replace(/\./g, '')
+      .replace(',', '.')
+  );
+}
+
 // Função para atualizar os totais
 function updateTotals() {
   const income = transactions
@@ -280,13 +308,8 @@ async function handleTransactionSubmit(e) {
     return;
   }
 
-  // 🔧 Conversão segura do valor
-  const valor = parseFloat(
-    rawValue
-      .replace(/\s|[^\d,.-]/g, '')
-      .replace(/\./g, '')
-      .replace(',', '.')
-  );
+  // Usa a nova função para converter o valor
+  const valor = parseCurrencyValue(rawValue);
 
   if (isNaN(valor)) {
     alert('Valor inválido. Digite um número no formato correto (ex: 1.234,56).');
@@ -337,6 +360,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   const transactionForm = document.getElementById('transaction-form');
   if (transactionForm) {
     transactionForm.addEventListener('submit', handleTransactionSubmit);
+  }
+
+  // Adiciona o event listener para formatação do campo de valor
+  const valueInput = document.getElementById('value');
+  if (valueInput) {
+    valueInput.addEventListener('input', (e) => {
+      formatCurrencyInput(e.target);
+    });
+    
+    // Formata o valor quando o campo recebe foco
+    valueInput.addEventListener('focus', (e) => {
+      if (!e.target.value) {
+        e.target.value = '0,00';
+      }
+    });
   }
 
   // Carrega os dados iniciais
