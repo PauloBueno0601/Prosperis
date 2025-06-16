@@ -170,18 +170,37 @@ function addTransactionEditDeleteListeners() {
   });
 
   document.querySelectorAll('.transaction-actions .delete').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      if (!confirm('Deseja realmente deletar esta transação?')) return;
+    btn.addEventListener('click', () => {
       const id = btn.dataset.id;
+      const modal = document.getElementById('deleteModal');
+      const confirmBtn = modal.querySelector('.confirm-btn');
+      const cancelBtn = modal.querySelector('.cancel-btn');
 
-      try {
-        const res = await fetch(`/api/transacoes/${id}`, { method: 'DELETE' });
-        if (!res.ok) throw new Error('Erro ao deletar transação');
+      // Remove listeners anteriores para evitar duplicação
+      const newConfirmBtn = confirmBtn.cloneNode(true);
+      const newCancelBtn = cancelBtn.cloneNode(true);
+      confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+      cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
 
-        await loadTransactions();
-      } catch (err) {
-        alert(err.message);
-      }
+      // Adiciona listeners aos novos botões
+      newConfirmBtn.addEventListener('click', async () => {
+        try {
+          const res = await fetch(`/api/transacoes/${id}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Erro ao deletar transação');
+
+          await loadTransactions();
+          modal.classList.remove('active');
+        } catch (err) {
+          alert(err.message);
+        }
+      });
+
+      newCancelBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+      });
+
+      // Mostra o modal
+      modal.classList.add('active');
     });
   });
 }

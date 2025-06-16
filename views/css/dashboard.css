@@ -357,3 +357,85 @@ body {
 .cards .card:nth-child(1) { animation-delay: 0.1s; }
 .cards .card:nth-child(2) { animation-delay: 0.2s; }
 .cards .card:nth-child(3) { animation-delay: 0.3s; }
+
+/* Modal de Confirmação */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 400px;
+  width: 90%;
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal {
+  transform: translateY(0);
+}
+
+.modal h3 {
+  margin: 0 0 1rem 0;
+  color: var(--gray-800);
+  font-size: 1.25rem;
+}
+
+.modal p {
+  margin: 0 0 1.5rem 0;
+  color: var(--gray-600);
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.modal-buttons button {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal-buttons .cancel-btn {
+  background: var(--gray-200);
+  color: var(--gray-700);
+  border: none;
+}
+
+.modal-buttons .cancel-btn:hover {
+  background: var(--gray-300);
+}
+
+.modal-buttons .confirm-btn {
+  background: var(--danger);
+  color: white;
+  border: none;
+}
+
+.modal-buttons .confirm-btn:hover {
+  background: #dc2626;
+}
