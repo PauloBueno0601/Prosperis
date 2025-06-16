@@ -277,7 +277,7 @@ Mobile
 ### 4.1 Demonstração do Sistema Web 
 
 <div align="center">
-  <figcaption><strong>Figura 4 - Vídeo Demonstrativo da Aplicação</strong></figcaption>
+  <figcaption><strong> Vídeo Demonstrativo da Aplicação</strong></figcaption>
   <br>
   <a href="https://drive.google.com/file/d/1O25zZ-B5lr6yRrqvD2oGjQzQQzU8clAt/view?usp=sharing" target="_blank">
     Clique aqui para assistir ao vídeo demonstrativo no Google Drive
@@ -304,4 +304,3 @@ Com essas melhorias, acredito que o Prosperis pode se transformar em uma ferrame
 
 
 ---
--
