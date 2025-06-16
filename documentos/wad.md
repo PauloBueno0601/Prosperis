@@ -10,11 +10,10 @@ Paulo Henrique Bueno Fernandes
 
 ## Sumário
 
-1. [Introdução](#c1)  
-2. [Visão Geral da Aplicação Web](#c2)  
-3. [Projeto Técnico da Aplicação Web](#c3)  
+1. [Introdução](#c1)   
+2. [Projeto Técnico da Aplicação Web](#c2)  
+3. [Arquitetura da Aplicação Web](#c3)
 4. [Desenvolvimento da Aplicação Web](#c4)  
-5. [Referências](#c5)  
 
 <br>
 
@@ -26,21 +25,9 @@ A aplicação foi projetada para ser intuitiva, segura e funcional, contando com
 
 Por meio da aplicação Prosperis, espera-se promover a educação financeira, incentivar o planejamento pessoal, facilitar a tomada de decisões baseadas em dados reais e atualizados, e inspirar os usuários a construírem uma relação saudável com o dinheiro, rumo a uma vida financeira mais próspera e equilibrada.
 
-## <a name="c2"></a>2. Visão Geral da Aplicação Web
+## <a name="c2"></a>2. Projeto da Aplicação Web
 
-### 2.1. Personas (Semana 01)
-
-*Posicione aqui sua(s) Persona(s) em forma de texto markdown com imagens, ou como imagem de template preenchido. Atualize esta seção ao longo do módulo se necessário.*
-
-### 2.2. User Stories (Semana 01)
-
-*Posicione aqui a lista de User Stories levantadas para o projeto. Siga o template de User Stories e utilize a referência USXX para numeração (US01, US02, US03, ...). Indique todas as User Stories mapeadas, mesmo aquelas que não forem implementadas ao longo do projeto. Não se esqueça de explicar o INVEST de 1 User Storie prioritária.*
-
----
-
-## <a name="c3"></a>3. Projeto da Aplicação Web
-
-### 3.1. Modelagem do banco de dados  
+### 2.1. Modelagem do banco de dados  
 
 &emsp; A modelagem de banco de dados é uma etapa fundamental no desenvolvimento de sistemas de informação, sendo o processo de projetar a estrutura lógica e física que organizará os dados de forma eficiente e segura. Este processo envolve a identificação das entidades principais, a definição de seus atributos e a criação de relacionamentos entre elas, utilizando ferramentas como diagramas entidade-relacionamento (DER) e notações como chaves primárias (PK) e estrangeiras (FK). Um modelo bem elaborado garante integridade, escalabilidade e facilidade de manutenção, permitindo consultas complexas e análises precisas.
 
@@ -152,7 +139,7 @@ CREATE TABLE transacoes (
 ```
 
 
-### 3.1.1 BD e Models (Semana 5)
+### 2.1.1 BD e Models
 
 No contexto da arquitetura Model-View-Controller (MVC), os Models (Modelos) são a camada responsável por gerenciar os dados da aplicação, a lógica de negócios e as regras de manipulação desses dados. Eles representam a estrutura do domínio do problema, ou seja, as entidades e como elas se relacionam, além de serem a ponte de comunicação com o sistema de persistência (o banco de dados).
 
@@ -200,29 +187,16 @@ tipo: Indica se a transação é uma receita ou uma despesa.
 `conta_id`: Chave estrangeira que liga a transação a uma Conta.
 `criado_em`: Timestamp da criação do registro da transação.
 `atualizado_em`: Timestamp da última modificação do registro da transação.
-### 3.2. Arquitetura 
+
+## <a name="c2"></a>3. Arquitetura da Aplicação Web
+
+### 3.1 Arquitetura 
 
 O Diagrama MVC é uma representação visual da arquitetura Model-View-Controller (MVC), um padrão de design de software amplamente utilizado no desenvolvimento de aplicações, especialmente as web. Seu principal objetivo é separar as responsabilidades de uma aplicação em três componentes interconectados, facilitando a organização do código, a manutenção, a escalabilidade e o desenvolvimento colaborativo.
 <img src="../assets/diagrama.png" width="100%">
 
-### 3.3. Wireframes (Semana 03)
 
-*Posicione aqui as imagens do wireframe construído para sua solução e, opcionalmente, o link para acesso (mantenha o link sempre público para visualização).*
-
-### 3.4. Guia de estilos (Semana 05)
-
-*Descreva aqui orientações gerais para o leitor sobre como utilizar os componentes do guia de estilos de sua solução.*
-
-
-### 3.5. Protótipo de alta fidelidade (Semana 05)
-
-*Posicione aqui algumas imagens demonstrativas de seu protótipo de alta fidelidade e o link para acesso ao protótipo completo (mantenha o link sempre público para visualização).*
-
-### 3.6. WebAPI e endpoints (Semana 05)
-
-*Utilize um link para outra página de documentação contendo a descrição completa de cada endpoint. Ou descreva aqui cada endpoint criado para seu sistema.*  
-
-### 3.7 Interface e Navegação 
+### 3.2 Interface e Navegação 
 
 A interface do Prosperis foi desenvolvida com foco em simplicidade e acessibilidade. A aplicação conta com telas intuitivas de login e cadastro, além de uma dashboard completa, onde o usuário pode visualizar seu saldo atualizado em tempo real e gerenciar suas transações financeiras, que já estão integradas ao banco de dados. Cada transação exibe detalhes relevantes, como valor, data, tipo e descrição, oferecendo um controle financeiro prático, funcional e eficaz.O desenvolvimento do frontend foi realizado utilizando HTML, CSS e JavaScript, com integração total com o backend por meio da Fetch API. Todo o sistema foi estruturado seguindo o padrão de arquitetura MVC (Model-View-Controller), garantindo organização, manutenção e escalabilidade do código. O layout foi pensado para ser responsivo, permitindo o uso em diferentes dispositivos e resoluções de tela.
 
@@ -298,23 +272,36 @@ Mobile
 - Proteção contra XSS
 - Sanitização de inputs
 - Gerenciamento de sessão
-## <a name="c4"></a>4. Desenvolvimento da Aplicação Web (Semana 8)
+## <a name="c4"></a>4. Desenvolvimento da Aplicação Web 
 
-### 4.1 Demonstração do Sistema Web (Semana 8)
+### 4.1 Demonstração do Sistema Web 
 
-*VIDEO: Insira o link do vídeo demonstrativo nesta seção*
-*Descreva e ilustre aqui o desenvolvimento do sistema web completo, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar.*
+<div align="center">
+  <figcaption><strong>Figura 4 - Vídeo Demonstrativo da Aplicação</strong></figcaption>
+  <br>
+  <a href="https://drive.google.com/file/d/1O25zZ-B5lr6yRrqvD2oGjQzQQzU8clAt/view?usp=sharing" target="_blank">
+    Clique aqui para assistir ao vídeo demonstrativo no Google Drive
+  </a>
+  <br>
+  <em>Fonte: Material produzido pelo autor (2025)</em>
+</div>
 
-### 4.2 Conclusões e Trabalhos Futuros (Semana 8)
+&emsp; Vídeo demonstrativo da aplicação, apresentando as principais funcionalidades e uma breve explicação sobre o que foi desenvolvido. Para detalhes técnicos mais aprofundados, consulte o próprio documento Word ou o arquivo README, onde você encontrará informações adicionais e um passo a passo para visualização.
 
-*Indique pontos fortes e pontos a melhorar de maneira geral.*
-*Relacione também quaisquer outras ideias que você tenha para melhorias futuras.*
+### 4.2 Conclusões e Trabalhos Futuros 
+
+Concluindo o desenvolvimento da plataforma Prosperis, posso afirmar que o projeto representou um desafio, especialmente nas etapas de autenticação de usuários e na integração entre o front-end e o back-end. Durante o processo, enfrentei desafios técnicos, mas consegui superá-los e entregar uma aplicação que é simples, rápida e prática, atendendo ao objetivo de facilitar o controle financeiro pessoal.
+
+A plataforma foi pensada para ser acessível a qualquer pessoa que deseja organizar melhor suas finanças, independentemente do nível de conhecimento técnico.
+
+Pensando em trabalhos futuros, vejo grande potencial de evolução para o Prosperis. Um dos próximos passos seria a integração com bancos digitais, permitindo a importação automática de transações financeiras realizadas em diferentes instituições, o que traria ainda mais comodidade aos usuários.
+
+Além disso, outras melhorias podem ser exploradas, como a implementação de notificações financeiras personalizadas, relatórios avançados com gráficos interativos, e a criação de um sistema de metas de economia, para ajudar os usuários a alcançarem seus objetivos financeiros. 
+
+Com essas melhorias, acredito que o Prosperis pode se transformar em uma ferramenta ainda mais completa e eficiente para o gerenciamento das finanças pessoais.
 
 
 
-## <a name="c5"></a>5. Referências
-
-_Incluir as principais referências de seu projeto, para que seu parceiro possa consultar caso ele se interessar em aprofundar. Um exemplo de referência de livro e de site:_<br>
 
 ---
----
+-
